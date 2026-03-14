@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KT — Founder | Trader | Entrepreneur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #070707; --bg2: #0f0f0f; --bg3: #181818;
+  --border: rgba(255,255,255,0.06); --border-h: rgba(255,255,255,0.13);
+  --text: #f2ede4; --text2: #b0aba2; --muted: #4e4b48;
+  --accent: #c8a96e; --accent2: #7a9e7e;
+  --fd: 'Big Shoulders Display', sans-serif;
+  --fm: 'DM Mono', monospace;
+  --fb: 'DM Sans', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--fb); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+/* CURSOR */
+* { cursor: none !important; }
+#cur { position: fixed; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%,-50%); transition: width .25s, height .25s; }
+#ring { position: fixed; width: 30px; height: 30px; border: 1px solid rgba(200,169,110,0.28); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+#cur.on { width: 11px; height: 11px; }
+#ring.on { width: 50px; height: 50px; border-color: rgba(200,169,110,0.1); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; padding: 24px 64px; display: flex; justify-content: space-between; align-items: center; transition: all .4s; border-bottom: 1px solid transparent; }
+nav.on { background: rgba(7,7,7,0.94); border-color: var(--border); backdrop-filter: blur(20px); padding: 15px 64px; }
+.logo { font-family: var(--fd); font-size: 28px; font-weight: 900; letter-spacing: 5px; color: var(--accent); position: relative; z-index: 1; }
+.nav-links { display: flex; gap: 40px; list-style: none; position: relative; z-index: 1; }
+.nav-links a { font-family: var(--fm); font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width .25s; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; position: relative; overflow: hidden;
+  display: grid; grid-template-rows: 1fr auto auto;
+}
+#heroCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(200,169,110,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(200,169,110,0.018) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.hero-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 65% 75% at 50% 48%, rgba(7,7,7,0.86) 0%, rgba(7,7,7,0.55) 55%, rgba(7,7,7,0.15) 100%);
+}
+.scanline { position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, rgba(200,169,110,0.06), transparent); animation: scan 8s linear infinite; pointer-events: none; z-index: 4; }
+@keyframes scan { 0%{top:0} 100%{top:100%} }
+.bracket { position: absolute; width: 22px; height: 22px; opacity: 0.15; z-index: 4; }
+.br-tl { top: 16px; left: 16px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+.br-tr { top: 16px; right: 16px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+.br-bl { bottom: 80px; left: 16px; border-bottom: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+.br-br { bottom: 80px; right: 16px; border-bottom: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+.live-badge { position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 6px; font-family: var(--fm); font-size: 9px; letter-spacing: 2px; color: var(--accent2); z-index: 10; }
+.live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent2); animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.55)} }
+.chart-label { position: absolute; top: 20px; left: 20px; font-family: var(--fm); font-size: 9px; letter-spacing: 3px; color: rgba(200,169,110,0.3); z-index: 10; text-transform: uppercase; transition: opacity .6s; }
+
+/* CENTERED HERO CONTENT */
+.hero-center {
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; position: relative; z-index: 5; padding: 120px 40px 0;
+}
+.hero-tag { font-family: var(--fm); font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: var(--accent); opacity: .55; margin-bottom: 28px; display: flex; align-items: center; gap: 16px; }
+.hero-tag::before, .hero-tag::after { content: ''; width: 28px; height: 1px; background: var(--accent); opacity: .4; }
+.hero-title { font-family: var(--fd); font-weight: 900; font-size: clamp(72px, 10vw, 148px); line-height: 0.9; letter-spacing: 3px; color: var(--text); }
+.hero-title .gold { color: var(--accent); display: block; }
+.hero-title .ghost { display: block; color: transparent; -webkit-text-stroke: 1px rgba(242,237,228,0.1); letter-spacing: 6px; }
+.hero-rule { width: 44px; height: 1px; background: var(--accent); opacity: .22; margin: 28px auto 22px; }
+.hero-sub { font-family: var(--fm); font-size: 11px; color: var(--muted); line-height: 2; letter-spacing: .5px; }
+.hero-sub strong { color: var(--text2); font-weight: 400; }
+
+/* HERO BOTTOM BAR */
+.hero-bar {
+  position: relative; z-index: 5;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 24px 64px; border-top: 1px solid var(--border);
+  background: rgba(7,7,7,0.5);
+}
+.hstats { display: flex; gap: 48px; }
+.hstat { display: flex; flex-direction: column; gap: 3px; }
+.hstat-v { font-family: var(--fm); font-size: 11px; color: var(--text2); letter-spacing: .5px; }
+.hstat-l { font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+.hbtns { display: flex; gap: 10px; }
+
+/* TICKER */
+.ticker { position: relative; height: 36px; border-top: 1px solid rgba(255,255,255,0.04); overflow: hidden; display: flex; align-items: center; background: rgba(7,7,7,0.85); z-index: 6; }
+.tick-track { display: flex; animation: tickScroll 28s linear infinite; white-space: nowrap; }
+.tick-item { display: flex; gap: 10px; align-items: center; font-family: var(--fm); font-size: 10px; letter-spacing: 1px; padding: 0 32px; border-right: 1px solid rgba(255,255,255,0.03); }
+.t-sym { color: #3a3835; }
+.t-val { color: #7a7570; }
+.t-up { color: #5a7e5e; }
+.t-dn { color: #7a3a3a; }
+@keyframes tickScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* BUTTONS */
+.btn { font-family: var(--fm); font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none; padding: 13px 26px; border: 1px solid var(--border-h); color: var(--text); position: relative; overflow: hidden; display: inline-block; transition: color .25s, border-color .25s; }
+.btn::before { content: ''; position: absolute; inset: 0; background: var(--accent); transform: translateY(101%); transition: transform .32s cubic-bezier(.4,0,.2,1); z-index: 0; }
+.btn span { position: relative; z-index: 1; }
+.btn:hover::before { transform: translateY(0); }
+.btn:hover { color: #070707; border-color: var(--accent); }
+.btn-g { border-color: var(--border); color: var(--muted); }
+
+/* ── SCROLL ANIMATIONS ── */
+[data-anim] { opacity: 0; transition: opacity .95s cubic-bezier(.4,0,.2,1), transform .95s cubic-bezier(.4,0,.2,1); }
+[data-anim="up"]    { transform: translateY(40px); }
+[data-anim="left"]  { transform: translateX(-36px); }
+[data-anim="right"] { transform: translateX(36px); }
+[data-anim="scale"] { transform: scale(.95); }
+[data-anim].in      { opacity: 1 !important; transform: none !important; }
+
+/* ── SECTIONS ── */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 130px 64px; position: relative; z-index: 1; }
+.sh { display: flex; align-items: center; gap: 20px; margin-bottom: 64px; }
+.sh-num { font-family: var(--fm); font-size: 10px; letter-spacing: 3px; color: var(--accent); opacity: .45; }
+.sh-title { font-family: var(--fd); font-size: clamp(44px, 5.5vw, 76px); font-weight: 800; letter-spacing: 2px; color: var(--text); line-height: 1; }
+.sh-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ABOUT */
+.about-g { display: grid; grid-template-columns: 3fr 2fr; gap: 88px; align-items: start; }
+.about-text p { color: var(--text2); font-size: 16px; line-height: 2.05; margin-bottom: 22px; font-weight: 300; }
+.about-text p strong { color: var(--text); font-weight: 400; }
+.about-text blockquote { border-left: 1px solid var(--accent); padding: 4px 0 4px 24px; margin: 36px 0; font-family: var(--fm); font-size: 12px; color: rgba(200,169,110,0.6); letter-spacing: 1px; line-height: 1.9; }
+.atags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.atag { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border: 1px solid var(--border); color: var(--text2); transition: all .2s; }
+.atag:hover { border-color: var(--accent); color: var(--accent); }
+.astats { display: flex; flex-direction: column; gap: 1px; background: var(--border); }
+.arow { background: var(--bg); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; transition: background .2s; }
+.arow:hover { background: var(--bg3); }
+.arow-l { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.arow-v { font-family: var(--fd); font-size: 26px; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+
+/* PROJECTS */
+.proj-outer { position: relative; z-index: 1; padding: 130px 0; }
+.proj-hdr { max-width: 1200px; margin: 0 auto 56px; padding: 0 64px; display: flex; align-items: center; gap: 20px; }
+.proj-grid { max-width: 1200px; margin: 0 auto; padding: 0 64px; display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.pcard { background: var(--bg); padding: 34px 28px; position: relative; overflow: hidden; transition: background .25s; display: flex; flex-direction: column; }
+.pcard:hover { background: var(--bg2); }
+.pcard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s ease; }
+.pcard:hover::before { transform: scaleX(1); }
+.pcard.wide { grid-column: span 2; }
+.pcard.wide .pc-title { font-size: 32px; }
+.pc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+.pc-num { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; color: var(--muted); }
+.pc-status { font-family: var(--fm); font-size: 8px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 9px; border: 1px solid; }
+.s-act { border-color: var(--accent); color: var(--accent); }
+.s-prog { border-color: rgba(122,158,126,.5); color: var(--accent2); }
+.s-done { border-color: var(--border-h); color: var(--muted); }
+.pc-title { font-family: var(--fd); font-size: 24px; font-weight: 800; letter-spacing: 1px; color: var(--text); margin-bottom: 12px; line-height: 1.05; }
+.pc-desc { font-size: 13px; color: var(--text2); line-height: 1.9; margin-bottom: 22px; font-weight: 300; flex: 1; }
+.pc-tools { display: flex; flex-wrap: wrap; gap: 5px; }
+.tool { font-family: var(--fm); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; background: var(--bg3); border: 1px solid var(--border); color: var(--muted); }
+
+/* LICENSES */
+.lic-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.lcard { background: var(--bg); padding: 34px 28px; position: relative; overflow: hidden; transition: background .2s; }
+.lcard:hover { background: var(--bg3); }
+.lcard::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: bottom; transition: transform .35s ease; }
+.lcard:hover::after { transform: scaleY(1); }
+.lc-phase { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+.lc-code { font-family: var(--fd); font-size: 52px; font-weight: 900; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+.lc-a { color: var(--accent); } .lc-p { color: var(--text); opacity: .35; } .lc-l { color: var(--accent2); opacity: .55; }
+.lc-name { font-family: var(--fm); font-size: 9px; letter-spacing: 1px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+.lc-badge { display: inline-block; font-family: var(--fm); font-size: 8px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border: 1px solid; }
+.lb-a { border-color: var(--accent); color: var(--accent); } .lb-p { border-color: var(--border-h); color: var(--muted); } .lb-l { border-color: rgba(122,158,126,.4); color: var(--accent2); }
+
+/* SKILLS */
+.sk-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+.sk-lbl { font-family: var(--fm); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.sk-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.sk-name { font-family: var(--fm); font-size: 11px; color: var(--text2); width: 196px; flex-shrink: 0; }
+.sk-bar { flex: 1; height: 1px; background: var(--border); position: relative; }
+.sk-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); width: 0; transition: width 1.6s cubic-bezier(.4,0,.2,1); }
+.sk-pct { font-family: var(--fm); font-size: 9px; color: var(--muted); width: 26px; text-align: right; }
+
+/* CONTACT */
+.ct-g { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: start; }
+.ct-head { font-family: var(--fd); font-size: clamp(44px, 5vw, 68px); font-weight: 900; letter-spacing: 2px; line-height: 1; color: var(--text); margin-bottom: 22px; }
+.ct-sub { font-size: 15px; color: var(--text2); line-height: 1.95; font-weight: 300; margin-bottom: 36px; }
+.clinks { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.clink { background: var(--bg2); padding: 22px 26px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text); font-family: var(--fm); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; transition: background .2s, padding-left .3s; position: relative; overflow: hidden; }
+.clink::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--accent); transition: width .3s; }
+.clink:hover { background: var(--bg3); padding-left: 34px; }
+.clink:hover::before { width: 2px; }
+.clink-arr { font-size: 16px; color: var(--muted); transition: transform .2s, color .2s; position: relative; }
+.clink:hover .clink-arr { transform: translate(3px,-3px); color: var(--accent); }
+
+/* DIVIDER */
+.div { border: none; border-top: 1px solid var(--border); margin: 0 64px; position: relative; z-index: 1; }
+footer { border-top: 1px solid var(--border); padding: 26px 64px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+footer p { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; color: var(--muted); }
+
+::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:rgba(200,169,110,.2)}
+
+@media(max-width:900px){
+  nav{padding:18px 24px} .nav-links{display:none}
+  .hero-bar{padding:20px 24px} .hstats{gap:24px} .hero-title{font-size:clamp(56px,12vw,100px)}
+  .wrap{padding:88px 28px} .proj-hdr,.proj-grid{padding-left:28px;padding-right:28px}
+  .about-g,.sk-cols,.ct-g{grid-template-columns:1fr;gap:44px}
+  .proj-grid{grid-template-columns:1fr} .pcard.wide{grid-column:span 1}
+  .lic-grid{grid-template-columns:repeat(2,1fr)} .div{margin:0 28px}
+  footer{padding:20px 28px;flex-direction:column;gap:6px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="ring"></div>
+
+<nav id="nav">
+  <div class="logo">KT</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#licenses">Licenses</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-grid"></div>
+  <div class="hero-vignette"></div>
+  <div class="scanline"></div>
+  <div class="bracket br-tl"></div><div class="bracket br-tr"></div>
+  <div class="bracket br-bl"></div><div class="bracket br-br"></div>
+  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+  <div class="chart-label" id="chartLabel">CANDLESTICK</div>
+
+  <div class="hero-center">
+    <div class="hero-tag">Portfolio — 2026</div>
+    <h1 class="hero-title">
+      FOUNDER
+      <span class="gold">TRADER.</span>
+      <span class="ghost">ENTREPRENEUR</span>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">
+      Co-founder of <strong>Centurion Capital</strong> &nbsp;·&nbsp;
+      Independently raised and deployed <strong>six-figure capital</strong> across live markets &nbsp;·&nbsp;
+      <strong>5+ years</strong> in the markets
+    </p>
+  </div>
+
+  <div class="hero-bar">
+    <div class="hstats">
+      <div class="hstat"><span class="hstat-v">NQ / ES</span><span class="hstat-l">Futures</span></div>
+      <div class="hstat"><span class="hstat-v">Six-Figure</span><span class="hstat-l">Capital Deployed</span></div>
+      <div class="hstat"><span class="hstat-v">Series 65</span><span class="hstat-l">In Progress</span></div>
+      <div class="hstat"><span class="hstat-v">9+ Projects</span><span class="hstat-l">Portfolio</span></div>
+    </div>
+    <div class="hbtns">
+      <a href="#projects" class="btn"><span>View Work</span></a>
+      <a href="#contact" class="btn btn-g"><span>Contact</span></a>
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="tick-track" id="tickTrack"></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="wrap" id="about">
+  <div class="sh" data-anim="up">
+    <span class="sh-num">01</span><h2 class="sh-title">About</h2><div class="sh-line"></div>
+  </div>
+  <div class="about-g">
+    <div class="about-text" data-anim="left">
+      <p>Co-founder of <strong>Centurion Capital</strong> — an investment firm built with institutional infrastructure, proprietary systems, and a long-term mandate to compete at the highest level. Not a side project. A serious operation built from the ground up.</p>
+      <p>Independently raised and deployed <strong>six-figure capital</strong> across live markets — separate from the firm. Over <strong>5 years developing real edge in the markets</strong> — primarily NQ and ES futures — through a proprietary model built around high-impact news catalysts, Wyckoff methodology, supply & demand, and order flow. Every entry has a reason. Every position has a plan.</p>
+      <blockquote>Building systems, technology, and organizations designed to last — and built to win.</blockquote>
+      <p>Beyond the fund — developing a <strong>proprietary AI-driven analytics platform</strong>, completing a multi-phase licensing roadmap, and building financial models that meet institutional standards.</p>
+      <div class="atags">
+        <span class="atag">Hedge Fund Operations</span><span class="atag">Futures Trading</span>
+        <span class="atag">Financial Modeling</span><span class="atag">AI & Technology</span>
+        <span class="atag">Entrepreneurship</span><span class="atag">Capital Raising</span>
+      </div>
+    </div>
+    <div data-anim="right">
+      <div class="astats">
+        <div class="arow"><span class="arow-l">Primary Markets</span><span class="arow-v">NQ / ES</span></div>
+        <div class="arow"><span class="arow-l">Capital Deployed</span><span class="arow-v">6-FIG+</span></div>
+        <div class="arow"><span class="arow-l">Market Experience</span><span class="arow-v">5+ YRS</span></div>
+        <div class="arow"><span class="arow-l">Active License</span><span class="arow-v">S65</span></div>
+        <div class="arow"><span class="arow-l">Target Credentials</span><span class="arow-v">6+</span></div>
+        <div class="arow"><span class="arow-l">Time Horizon</span><span class="arow-v">&#8734;</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- PROJECTS -->
+<div class="proj-outer" id="projects">
+  <div class="proj-hdr" data-anim="up">
+    <span class="sh-num">02</span><h2 class="sh-title">Projects</h2><div class="sh-line"></div>
+  </div>
+  <div class="proj-grid">
+    <div class="pcard wide" data-anim="up" data-delay="0">
+      <div class="pc-top"><span class="pc-num">001</span><span class="pc-status s-prog">In Progress</span></div>
+      <div class="pc-title">Centurion Capital</div>
+      <p class="pc-desc">Institutional-grade investment firm co-founded and built from zero. Full legal infrastructure, investor documentation, proprietary trading systems, and operational frameworks built to scale. Focus on NQ/ES futures with systematic edge derived from news catalysts, multi-framework confluence, and order flow analysis.</p>
+      <div class="pc-tools"><span class="tool">Futures Trading</span><span class="tool">Fund Operations</span><span class="tool">Legal Structure</span><span class="tool">LP Relations</span><span class="tool">Risk Management</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="80">
+      <div class="pc-top"><span class="pc-num">002</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">Proprietary Analytics Platform</div>
+      <p class="pc-desc">AI-driven financial analytics system built for institutional-level market intelligence. Combining quantitative research, machine learning, and order flow for systematic edge generation. Built independently.</p>
+      <div class="pc-tools"><span class="tool">Python</span><span class="tool">AI / ML</span><span class="tool">Data Systems</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="0">
+      <div class="pc-top"><span class="pc-num">003</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">Proprietary Trading Model</div>
+      <p class="pc-desc">Systematic futures model built around high-impact news catalysts, Wyckoff methodology, supply & demand zones, and order flow confirmation. Four defined entry frameworks with strict risk parameters.</p>
+      <div class="pc-tools"><span class="tool">NQ / ES</span><span class="tool">Wyckoff</span><span class="tool">Order Flow</span><span class="tool">S&D</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="80">
+      <div class="pc-top"><span class="pc-num">004</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">DCF Valuation Model</div>
+      <p class="pc-desc">Professional discounted cash flow model in Excel. Full projection framework, sensitivity analysis, WACC, and terminal value output for institutional-grade investment thesis development.</p>
+      <div class="pc-tools"><span class="tool">Excel</span><span class="tool">Valuation</span><span class="tool">SEC Filings</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="160">
+      <div class="pc-top"><span class="pc-num">005</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">Trading Journal & Analytics</div>
+      <p class="pc-desc">Comprehensive performance analytics built around systematic futures trading. Tracks win rate, RR, session performance, setup type, and news catalyst attribution with full dashboard output.</p>
+      <div class="pc-tools"><span class="tool">Excel</span><span class="tool">Analytics</span><span class="tool">Backtesting</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="0">
+      <div class="pc-top"><span class="pc-num">006</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">Portfolio Performance Dashboard</div>
+      <p class="pc-desc">Multi-asset portfolio tracking and attribution model built to institutional reporting standards. Sharpe ratio, drawdown, benchmark comparison, and sector exposure in one dashboard.</p>
+      <div class="pc-tools"><span class="tool">Excel</span><span class="tool">Risk Metrics</span><span class="tool">Attribution</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="80">
+      <div class="pc-top"><span class="pc-num">007</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">P&L Attribution Model</div>
+      <p class="pc-desc">Granular P&L breakdown by setup type, news event, session, and market condition. Identifies edge concentration and performance drivers across a systematic futures strategy.</p>
+      <div class="pc-tools"><span class="tool">Excel</span><span class="tool">Python</span><span class="tool">Data Analysis</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="160">
+      <div class="pc-top"><span class="pc-num">008</span><span class="pc-status s-act">Live</span></div>
+      <div class="pc-title">Institutional Research Reports</div>
+      <p class="pc-desc">Professional equity and sector research formatted to institutional standards. Fundamental analysis, competitive positioning, valuation framework, and full investment thesis development.</p>
+      <div class="pc-tools"><span class="tool">Fundamental Analysis</span><span class="tool">Research</span><span class="tool">Word</span></div>
+    </div>
+    <div class="pcard" data-anim="up" data-delay="240">
+      <div class="pc-top"><span class="pc-num">009</span><span class="pc-status s-done">Completed</span></div>
+      <div class="pc-title">Private Business Venture</div>
+      <p class="pc-desc">Founded and operated a private business from the ground up. Full ownership of operations, revenue generation, and strategic execution. Firsthand experience no classroom provides.</p>
+      <div class="pc-tools"><span class="tool">Operations</span><span class="tool">Revenue</span><span class="tool">Strategy</span></div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- LICENSES -->
+<section class="wrap" id="licenses">
+  <div class="sh" data-anim="up"><span class="sh-num">03</span><h2 class="sh-title">Credentials</h2><div class="sh-line"></div></div>
+  <div class="lic-grid" data-anim="up">
+    <div class="lcard"><div class="lc-phase">Phase 1 — Now</div><div class="lc-code lc-a">S65</div><div class="lc-name">Investment Adviser Representative</div><span class="lc-badge lb-a">In Progress</span></div>
+    <div class="lcard"><div class="lc-phase">Phase 1 — Now</div><div class="lc-code lc-p">S3</div><div class="lc-name">Commodity Futures License</div><span class="lc-badge lb-p">Planned</span></div>
+    <div class="lcard"><div class="lc-phase">Phase 2</div><div class="lc-code lc-p">S31</div><div class="lc-name">Managed Futures License</div><span class="lc-badge lb-p">Planned</span></div>
+    <div class="lcard"><div class="lc-phase">Phase 2</div><div class="lc-code lc-p">FRM</div><div class="lc-name">Financial Risk Manager</div><span class="lc-badge lb-p">Planned</span></div>
+    <div class="lcard"><div class="lc-phase">Phase 3 — Long Term</div><div class="lc-code lc-l">CFA</div><div class="lc-name">Chartered Financial Analyst</div><span class="lc-badge lb-l">Long Term</span></div>
+    <div class="lcard"><div class="lc-phase">Phase 3 — Long Term</div><div class="lc-code lc-l">CAIA</div><div class="lc-name">Chartered Alternative Investment Analyst</div><span class="lc-badge lb-l">Long Term</span></div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- SKILLS -->
+<section class="wrap" id="skills">
+  <div class="sh" data-anim="up"><span class="sh-num">04</span><h2 class="sh-title">Skills</h2><div class="sh-line"></div></div>
+  <div class="sk-cols" data-anim="up">
+    <div>
+      <div class="sk-lbl">Finance & Trading</div>
+      <div class="sk-row"><span class="sk-name">Futures Trading Systems</span><div class="sk-bar"><div class="sk-fill" data-w="90"></div></div><span class="sk-pct">90</span></div>
+      <div class="sk-row"><span class="sk-name">Technical Analysis</span><div class="sk-bar"><div class="sk-fill" data-w="92"></div></div><span class="sk-pct">92</span></div>
+      <div class="sk-row"><span class="sk-name">Wyckoff Methodology</span><div class="sk-bar"><div class="sk-fill" data-w="86"></div></div><span class="sk-pct">86</span></div>
+      <div class="sk-row"><span class="sk-name">Order Flow Analysis</span><div class="sk-bar"><div class="sk-fill" data-w="78"></div></div><span class="sk-pct">78</span></div>
+      <div class="sk-row"><span class="sk-name">Risk Management</span><div class="sk-bar"><div class="sk-fill" data-w="83"></div></div><span class="sk-pct">83</span></div>
+      <div class="sk-row"><span class="sk-name">Macroeconomic Analysis</span><div class="sk-bar"><div class="sk-fill" data-w="72"></div></div><span class="sk-pct">72</span></div>
+    </div>
+    <div>
+      <div class="sk-lbl">Technology & Modeling</div>
+      <div class="sk-row"><span class="sk-name">Excel & Financial Modeling</span><div class="sk-bar"><div class="sk-fill" data-w="88"></div></div><span class="sk-pct">88</span></div>
+      <div class="sk-row"><span class="sk-name">Quantitative Research</span><div class="sk-bar"><div class="sk-fill" data-w="74"></div></div><span class="sk-pct">74</span></div>
+      <div class="sk-row"><span class="sk-name">Financial Research</span><div class="sk-bar"><div class="sk-fill" data-w="80"></div></div><span class="sk-pct">80</span></div>
+      <div class="sk-row"><span class="sk-name">Python</span><div class="sk-bar"><div class="sk-fill" data-w="56"></div></div><span class="sk-pct">56</span></div>
+      <div class="sk-row"><span class="sk-name">Data Visualization</span><div class="sk-bar"><div class="sk-fill" data-w="63"></div></div><span class="sk-pct">63</span></div>
+      <div class="sk-row"><span class="sk-name">Fund Operations</span><div class="sk-bar"><div class="sk-fill" data-w="76"></div></div><span class="sk-pct">76</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- CONTACT -->
+<section class="wrap" id="contact">
+  <div class="sh" data-anim="up"><span class="sh-num">05</span><h2 class="sh-title">Contact</h2><div class="sh-line"></div></div>
+  <div class="ct-g">
+    <div data-anim="left">
+      <div class="ct-head">LET'S TALK.</div>
+      <p class="ct-sub">Open to conversations with funds, traders, operators, and builders working at a high level. If you're serious about what you're building — reach out.</p>
+      <a href="#projects" class="btn"><span>View Projects</span></a>
+    </div>
+    <div class="clinks" data-anim="right">
+      <a href="https://www.linkedin.com/in/kerotadros" target="_blank" class="clink">LinkedIn<span class="clink-arr">&#8599;</span></a>
+      <a href="https://github.com/PrometheusT" target="_blank" class="clink">GitHub<span class="clink-arr">&#8599;</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>KT — 2026</p>
+  <p>Founder | Trader | Entrepreneur</p>
+</footer>
+
+<script>
+// ── HERO CANVAS ──
+const hc = document.getElementById('heroCanvas');
+const ctx = hc.getContext('2d');
+function resizeHero() { hc.width = hc.parentElement.offsetWidth; hc.height = hc.parentElement.offsetHeight; }
+resizeHero(); window.addEventListener('resize', resizeHero);
+
+const CW=9, GAP=5, STEP=CW+GAP;
+let candles=[], cPrice=21800, candleOffset=0;
+function genCandle(){ const m=(Math.random()-.47)*14,o=cPrice,c=o+m,h=Math.max(o,c)+Math.random()*5,l=Math.min(o,c)-Math.random()*5; cPrice=c; return{o,c,h,l}; }
+for(let i=0;i<140;i++) candles.push(genCandle());
+
+let linePrices=[], lineVols=[], lPrice=21800;
+function genBar(){ const m=(Math.random()-.48)*8; lPrice+=m; linePrices.push(lPrice); lineVols.push(Math.random()); }
+for(let i=0;i<200;i++) genBar();
+
+let mode=0, modeFrame=0;
+const MODES=['CANDLESTICK','LINE + VOLUME','ORDER FLOW DEPTH'];
+const MODEFRAMES=320;
+const chartLabel=document.getElementById('chartLabel');
+
+function toY(p,mn,mx,top,h){ return top+(1-(p-mn)/(mx-mn))*h; }
+function getRange(arr,pad=.07){ const mn=Math.min(...arr),mx=Math.max(...arr),b=(mx-mn)*pad; return{mn:mn-b,mx:mx+b}; }
+
+function drawCandles(W,H){
+  const vis=candles.slice(-Math.ceil(W/STEP)-2);
+  const {mn,mx}=getRange(vis.flatMap(c=>[c.h,c.l]));
+  const ch=H*.8,top=H*.08;
+  const sx=(W%STEP)-candleOffset;
+  vis.forEach((c,i)=>{
+    const x=sx+i*STEP; if(x<-CW||x>W+CW)return;
+    const isUp=c.c>=c.o;
+    const col=isUp?'rgba(200,169,110,0.65)':'rgba(180,178,170,0.3)';
+    const wk=isUp?'rgba(200,169,110,0.35)':'rgba(180,178,170,0.18)';
+    const bT=toY(Math.max(c.o,c.c),mn,mx,top,ch), bB=toY(Math.min(c.o,c.c),mn,mx,top,ch), bH=Math.max(bB-bT,1);
+    ctx.strokeStyle=wk; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x+CW/2,toY(c.h,mn,mx,top,ch)); ctx.lineTo(x+CW/2,toY(c.l,mn,mx,top,ch)); ctx.stroke();
+    ctx.strokeStyle=col; ctx.lineWidth=1; ctx.strokeRect(x,bT,CW,bH);
+    if(isUp){ctx.fillStyle='rgba(200,169,110,0.06)';ctx.fillRect(x+1,bT+1,CW-1,bH-1);}
+  });
+  if(vis.length>14){
+    ctx.beginPath(); ctx.strokeStyle='rgba(200,169,110,0.16)'; ctx.lineWidth=1.2;
+    for(let i=14;i<vis.length;i++){
+      const avg=vis.slice(i-14,i).reduce((s,c)=>s+(c.o+c.c)/2,0)/14;
+      const x=sx+i*STEP+CW/2; const y=toY(avg,mn,mx,top,ch);
+      i===14?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+}
+
+function drawLineVol(W,H){
+  const vis=linePrices.slice(-Math.ceil(W/2.5));
+  const vv=lineVols.slice(-vis.length);
+  const {mn,mx}=getRange(vis);
+  const ch=H*.58, top=H*.07, volH=H*.13, volTop=H*.75;
+  const step=W/(vis.length-1||1);
+  ctx.beginPath();
+  vis.forEach((p,i)=>{const x=i*step,y=toY(p,mn,mx,top,ch);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo(W,top+ch); ctx.lineTo(0,top+ch); ctx.closePath();
+  ctx.fillStyle='rgba(200,169,110,0.035)'; ctx.fill();
+  ctx.beginPath(); ctx.strokeStyle='rgba(200,169,110,0.45)'; ctx.lineWidth=1.4;
+  vis.forEach((p,i)=>{const x=i*step,y=toY(p,mn,mx,top,ch);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  const bw=Math.max(step-.5,1);
+  vv.forEach((v,i)=>{
+    const x=i*step-bw/2, bh=v*volH;
+    ctx.fillStyle=v>.65?'rgba(200,169,110,0.28)':'rgba(180,178,170,0.09)';
+    ctx.fillRect(x,volTop+(volH-bh),bw,bh);
+  });
+  [.25,.5,.75].forEach(f=>{
+    const y=top+f*ch; ctx.strokeStyle='rgba(255,255,255,0.03)'; ctx.lineWidth=.5;
+    ctx.setLineDash([3,8]); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); ctx.setLineDash([]);
+  });
+}
+
+function drawDepth(W,H){
+  const mid=W/2, levels=20, rH=(H*.72)/levels, sY=H*.1;
+  for(let i=0;i<levels;i++){
+    const y=sY+i*rH, dist=Math.abs(i-levels/2)/(levels/2);
+    const bid=(1-dist)*(.45+Math.random()*.55), ask=(1-dist)*(.45+Math.random()*.55);
+    const isMid=i===Math.floor(levels/2);
+    ctx.fillStyle=isMid?'rgba(200,169,110,0.22)':'rgba(200,169,110,0.07)';
+    ctx.fillRect(mid-bid*(mid*.88),y+.5,bid*(mid*.88),rH-1);
+    ctx.strokeStyle='rgba(200,169,110,0.18)'; ctx.lineWidth=.5; ctx.strokeRect(mid-bid*(mid*.88),y+.5,bid*(mid*.88),rH-1);
+    ctx.fillStyle=isMid?'rgba(180,178,170,0.15)':'rgba(180,178,170,0.04)';
+    ctx.fillRect(mid,y+.5,ask*(mid*.88),rH-1);
+    ctx.strokeStyle='rgba(180,178,170,0.12)'; ctx.strokeRect(mid,y+.5,ask*(mid*.88),rH-1);
+  }
+  ctx.strokeStyle='rgba(200,169,110,0.3)'; ctx.lineWidth=1;
+  ctx.setLineDash([3,6]); ctx.beginPath(); ctx.moveTo(mid,sY); ctx.lineTo(mid,sY+levels*rH); ctx.stroke(); ctx.setLineDash([]);
+  ctx.font='9px DM Mono,monospace'; ctx.fillStyle='rgba(200,169,110,0.28)';
+  ctx.textAlign='right'; ctx.fillText('BID',mid-10,sY-8);
+  ctx.fillStyle='rgba(180,178,170,0.22)'; ctx.textAlign='left'; ctx.fillText('ASK',mid+10,sY-8);
+}
+
+function heroLoop(){
+  const W=hc.width, H=hc.height;
+  ctx.clearRect(0,0,W,H);
+  modeFrame++;
+  if(modeFrame>=MODEFRAMES){
+    modeFrame=0; mode=(mode+1)%3;
+    chartLabel.style.opacity='0';
+    setTimeout(()=>{chartLabel.textContent=MODES[mode];chartLabel.style.opacity='1';},400);
+  }
+  if(mode===0){
+    drawCandles(W,H);
+    candleOffset+=0.38;
+    if(candleOffset>=STEP){candleOffset-=STEP;candles.push(genCandle());if(candles.length>300)candles.shift();}
+  } else if(mode===1){
+    drawLineVol(W,H);
+    if(modeFrame%3===0){genBar();if(linePrices.length>400){linePrices.shift();lineVols.shift();}}
+  } else {
+    drawDepth(W,H);
+  }
+  requestAnimationFrame(heroLoop);
+}
+heroLoop();
+
+// ── TICKER ──
+const tickers=[
+  {s:'NQ',v:21847.50,up:true},{s:'ES',v:5912.25,up:true},{s:'DXY',v:103.41,up:false},
+  {s:'VIX',v:14.82,up:false},{s:'GC',v:2184.30,up:true},{s:'CL',v:78.44,up:false},
+  {s:'YM',v:38924,up:true},{s:'RTY',v:2041.80,up:true},{s:'ZB',v:118.14,up:false},{s:'SI',v:24.82,up:true}
+];
+const tt=document.getElementById('tickTrack');
+const all=[...tickers,...tickers,...tickers];
+tt.innerHTML=all.map(t=>`<div class="tick-item"><span class="t-sym">${t.s}</span><span class="t-val" data-base="${t.v}" data-sym="${t.s}">${t.v.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2})}</span><span class="${t.up?'t-up':'t-dn'}">${t.up?'+':'-'}${(Math.random()*2+.1).toFixed(2)}%</span></div>`).join('');
+setInterval(()=>{
+  document.querySelectorAll('[data-base]').forEach(el=>{
+    const b=parseFloat(el.dataset.base), j=b*(1+(Math.random()-.5)*.0008);
+    el.textContent=j>1000?j.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}):j.toFixed(2);
+  });
+},900);
+
+// ── CURSOR ──
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.pcard,.lcard,.arow').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.add('on');ring.classList.add('on');});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('on');ring.classList.remove('on');});
+});
+
+// ── NAV + HERO PARALLAX ──
+const nav=document.getElementById('nav');
+const heroCenter=document.querySelector('.hero-center');
+const heroTitle=document.querySelector('.hero-title');
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY;
+  nav.classList.toggle('on',sy>40);
+  if(heroCenter) heroCenter.style.transform=`translateY(${sy*.12}px)`;
+  if(heroTitle) heroTitle.style.opacity=String(Math.max(0,1-sy/550));
+});
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const delay=parseInt(e.target.dataset.delay||'0');
+      setTimeout(()=>e.target.classList.add('in'),delay);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.07});
+document.querySelectorAll('[data-anim]').forEach(el=>obs.observe(el));
+
+// ── SKILL BARS ──
+const skObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.sk-fill').forEach(f=>f.style.width=f.dataset.w+'%');skObs.unobserve(e.target);}});
+},{threshold:0.2});
+document.querySelectorAll('.sk-cols').forEach(el=>skObs.observe(el));
+</script>
+</body>
+</html>
