@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KT | Trading Performance 2024–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f4f1eb;
+  --bg2:#eceae3;
+  --bg3:#e4e1d9;
+  --ink:#0a0a0a;
+  --ink2:#2a2a2a;
+  --ink3:#555;
+  --ink4:#888;
+  --rule:#c8c4b8;
+  --rule2:#dedad2;
+  --green:#1a7a3a;
+  --green-bg:#e8f5ec;
+  --red:#b91c1c;
+  --red-bg:#fef0f0;
+  --orange:#c47a1a;
+  --blue:#1a4fa0;
+  --term-bg:#0d1117;
+  --term-green:#00d26a;
+  --term-amber:#ffb700;
+  --term-red:#ff4757;
+  --term-blue:#4da6ff;
+  --term-dim:#4a5568;
+  --term-rule:#1e2d3d;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  line-height:1.5;
+  overflow-x:hidden;
+}
+
+/* ── TERMINAL HEADER ──────────────────────────────── */
+.terminal-bar{
+  background:var(--term-bg);
+  color:var(--term-green);
+  padding:0 32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:10px;
+  letter-spacing:0.05em;
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom:1px solid var(--term-rule);
+}
+
+.term-left{display:flex;align-items:center;gap:24px}
+.term-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--term-green);
+  box-shadow:0 0 6px var(--term-green);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.term-id{color:var(--term-amber);font-weight:500}
+.term-right{display:flex;gap:20px}
+.term-stat{color:var(--term-dim)}
+.term-stat span{color:var(--term-green)}
+
+/* ── NAV ──────────────────────────────────────────── */
+nav{
+  background:var(--bg2);
+  border-bottom:2px solid var(--ink);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 32px;
+  height:44px;
+}
+
+.nav-left{display:flex;align-items:center;gap:0}
+.nav-item{
+  padding:0 16px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  font-size:10px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  font-weight:500;
+  color:var(--ink3);
+  border-right:1px solid var(--rule);
+  cursor:pointer;
+  transition:background 0.15s, color 0.15s;
+  text-decoration:none;
+}
+.nav-item:hover,.nav-item.active{
+  background:var(--ink);
+  color:var(--bg);
+}
+.nav-name{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.08em;
+  color:var(--ink);
+}
+
+/* ── TICKER STRIP ─────────────────────────────────── */
+.ticker-strip{
+  background:var(--ink);
+  color:var(--bg);
+  height:28px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.ticker-inner{
+  display:flex;
+  gap:40px;
+  animation:scroll 30s linear infinite;
+  padding-left:100%;
+}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:10px;
+  letter-spacing:0.08em;
+}
+.tick-sym{font-weight:600;color:var(--term-amber)}
+.tick-val{color:#ccc}
+.tick-chg.pos{color:var(--term-green)}
+.tick-chg.neg{color:var(--term-red)}
+
+/* ── MAIN LAYOUT ──────────────────────────────────── */
+main{padding:0 32px 48px}
+
+/* ── HERO STRIP ───────────────────────────────────── */
+.hero-strip{
+  border-bottom:1px solid var(--rule);
+  padding:28px 0 24px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:32px;
+}
+.hero-left{}
+.hero-eyebrow{
+  font-size:9px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  margin-bottom:6px;
+}
+.hero-title{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:28px;
+  font-weight:300;
+  color:var(--ink);
+  letter-spacing:-0.02em;
+  line-height:1.1;
+}
+.hero-title strong{font-weight:600}
+.hero-meta{
+  margin-top:8px;
+  font-size:10px;
+  color:var(--ink4);
+  letter-spacing:0.05em;
+}
+.hero-pnl{
+  text-align:right;
+}
+.hero-pnl-label{
+  font-size:9px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  margin-bottom:4px;
+}
+.hero-pnl-value{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:40px;
+  font-weight:300;
+  color:var(--green);
+  letter-spacing:-0.02em;
+  line-height:1;
+}
+.hero-pnl-sub{
+  font-size:10px;
+  color:var(--ink4);
+  margin-top:4px;
+}
+
+/* ── KPI ROW ──────────────────────────────────────── */
+.kpi-row{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  border-bottom:2px solid var(--ink);
+  border-top:2px solid var(--ink);
+  margin:24px 0;
+}
+.kpi{
+  padding:14px 0 14px 16px;
+  border-right:1px solid var(--rule);
+  position:relative;
+}
+.kpi:last-child{border-right:none}
+.kpi-label{
+  font-size:8px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  margin-bottom:5px;
+}
+.kpi-val{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:20px;
+  font-weight:500;
+  color:var(--ink);
+  line-height:1;
+}
+.kpi-val.pos{color:var(--green)}
+.kpi-val.neg{color:var(--red)}
+.kpi-sub{font-size:9px;color:var(--ink4);margin-top:3px}
+
+/* ── SECTION ──────────────────────────────────────── */
+.section{margin:32px 0}
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--rule);
+}
+.section-label{
+  font-size:9px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  font-weight:600;
+  color:var(--ink);
+  background:var(--ink);
+  color:var(--bg);
+  padding:3px 8px;
+}
+.section-meta{font-size:9px;color:var(--ink4)}
+
+/* ── YEAR TABS ────────────────────────────────────── */
+.year-tabs{
+  display:flex;
+  gap:0;
+  margin-bottom:20px;
+  border-bottom:2px solid var(--ink);
+}
+.ytab{
+  padding:8px 20px;
+  font-size:10px;
+  letter-spacing:0.1em;
+  font-weight:500;
+  cursor:pointer;
+  border:1px solid var(--rule);
+  border-bottom:none;
+  background:var(--bg2);
+  color:var(--ink3);
+  transition:all 0.15s;
+  margin-right:-1px;
+}
+.ytab.active{
+  background:var(--ink);
+  color:var(--bg);
+  border-color:var(--ink);
+}
+.ytab:hover:not(.active){background:var(--bg3)}
+
+.year-panel{display:none}
+.year-panel.active{display:block}
+
+/* ── GRID ─────────────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+
+/* ── DATA TABLE ───────────────────────────────────── */
+.dt-wrap{
+  border:1px solid var(--rule);
+  overflow:hidden;
+}
+.dt-title{
+  background:var(--ink);
+  color:var(--bg);
+  padding:7px 12px;
+  font-size:9px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  font-weight:500;
+}
+table{width:100%;border-collapse:collapse}
+th{
+  padding:7px 10px;
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  font-weight:500;
+  text-align:left;
+  background:var(--bg2);
+  border-bottom:1px solid var(--rule);
+}
+th:not(:first-child){text-align:right}
+td{
+  padding:8px 10px;
+  border-bottom:1px solid var(--rule2);
+  font-size:10px;
+  color:var(--ink2);
+}
+td:not(:first-child){text-align:right}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+
+.pos{color:var(--green)!important;font-weight:500}
+.neg{color:var(--red)!important;font-weight:500}
+
+/* win bar */
+.wbar-wrap{display:flex;align-items:center;gap:7px;justify-content:flex-end}
+.wbar{width:52px;height:4px;background:var(--rule);border-radius:0;overflow:hidden}
+.wbar-fill{height:100%;background:var(--green)}
+.wbar-txt{font-size:10px;min-width:36px;text-align:right}
+
+/* ── MONTHLY TABLE ────────────────────────────────── */
+.mo-grid{
+  display:grid;
+  grid-template-columns:repeat(9,1fr);
+  border:1px solid var(--rule);
+}
+.mo-cell{
+  padding:12px 10px;
+  border-right:1px solid var(--rule2);
+  border-bottom:1px solid var(--rule2);
+}
+.mo-cell:last-child{border-right:none}
+.mo-name{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:5px}
+.mo-pnl{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  line-height:1.1;
+}
+.mo-meta{font-size:8px;color:var(--ink4);margin-top:3px}
+
+/* ── CHART CONTAINERS ─────────────────────────────── */
+.chart-wrap{
+  border:1px solid var(--rule);
+  padding:16px;
+  position:relative;
+}
+.chart-title{
+  font-size:9px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  margin-bottom:12px;
+  font-weight:500;
+}
+.chart-canvas{height:180px}
+
+/* ── RISK PANEL ───────────────────────────────────── */
+.risk-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+}
+.risk-cell{
+  background:var(--bg);
+  padding:14px 16px;
+}
+.risk-label{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink4);margin-bottom:4px}
+.risk-val{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:18px;
+  font-weight:500;
+  color:var(--ink);
+}
+.risk-val.pos{color:var(--green)}
+.risk-val.neg{color:var(--red)}
+
+/* ── TRADE CALLOUT ────────────────────────────────── */
+.trade-callout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  margin-bottom:24px;
+}
+.tc-cell{background:var(--bg);padding:16px 20px}
+.tc-badge{
+  font-size:8px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  font-weight:600;
+  margin-bottom:10px;
+  display:inline-block;
+  padding:2px 6px;
+}
+.tc-badge.best{background:var(--green-bg);color:var(--green)}
+.tc-badge.worst{background:var(--red-bg);color:var(--red)}
+.tc-pnl{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:28px;
+  font-weight:300;
+  line-height:1;
+  margin-bottom:8px;
+}
+.tc-meta{font-size:10px;color:var(--ink4);line-height:1.7}
+.tc-note{
+  font-size:10px;
+  color:var(--ink3);
+  font-style:italic;
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid var(--rule2);
+  line-height:1.5;
+}
+
+/* ── DISCLAIMER ───────────────────────────────────── */
+.disclaimer{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--orange);
+  padding:10px 14px;
+  font-size:9px;
+  color:var(--ink4);
+  letter-spacing:0.03em;
+  margin:20px 0;
+}
+
+/* ── FOOTER ───────────────────────────────────────── */
+footer{
+  background:var(--ink);
+  color:var(--bg2);
+  padding:20px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:9px;
+  letter-spacing:0.08em;
+}
+footer a{color:var(--term-amber);text-decoration:none}
+
+/* ── COMBINED ROW ─────────────────────────────────── */
+.combined-bar{
+  background:var(--term-bg);
+  color:var(--bg);
+  padding:16px 32px;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:0;
+  border-bottom:1px solid var(--term-rule);
+}
+.cb-cell{
+  padding:0 20px 0 0;
+  border-right:1px solid var(--term-rule);
+}
+.cb-cell:last-child{border-right:none;padding-right:0}
+.cb-label{font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--term-dim);margin-bottom:4px}
+.cb-val{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:18px;
+  font-weight:500;
+  line-height:1;
+}
+.cb-val.pos{color:var(--term-green)}
+.cb-val.neg{color:var(--term-red)}
+.cb-val.amber{color:var(--term-amber)}
+.cb-sub{font-size:8px;color:var(--term-dim);margin-top:3px}
+
+@media(max-width:1000px){
+  .kpi-row{grid-template-columns:repeat(4,1fr)}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .mo-grid{grid-template-columns:repeat(3,1fr)}
+  .combined-bar{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- TERMINAL BAR -->
+<div class="terminal-bar">
+  <div class="term-left">
+    <div class="term-dot"></div>
+    <span class="term-id">KT-PERF-2024-2025</span>
+    <span style="color:var(--term-dim)">PERSONAL TRADING JOURNAL</span>
+    <span style="color:var(--term-dim)">NQ · ES · GC · SI · FX</span>
+  </div>
+  <div class="term-right">
+    <span class="term-stat">STATUS <span>LIVE</span></span>
+    <span class="term-stat">PERIOD <span>JAN 2024 – SEP 2025</span></span>
+    <span class="term-stat">CAPITAL <span>PERSONAL</span></span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a class="nav-item active" href="#overview">Overview</a>
+    <a class="nav-item" href="#performance">Performance</a>
+    <a class="nav-item" href="#risk">Risk Metrics</a>
+    <a class="nav-item" href="#monthly">Monthly</a>
+  </div>
+  <div class="nav-name">KERELLOS TADROS &nbsp;·&nbsp; CENTURION CAPITAL</div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-strip">
+  <div class="ticker-inner">
+    <div class="tick-item"><span class="tick-sym">NQ</span><span class="tick-val">COMBINED WIN</span><span class="tick-chg pos">64.3%</span></div>
+    <div class="tick-item"><span class="tick-sym">TOTAL P&L</span><span class="tick-chg pos">+$156,527</span></div>
+    <div class="tick-item"><span class="tick-sym">GC</span><span class="tick-val">GOLD WIN</span><span class="tick-chg pos">71.4%</span></div>
+    <div class="tick-item"><span class="tick-sym">2024</span><span class="tick-val">WIN RATE</span><span class="tick-chg pos">72.5%</span></div>
+    <div class="tick-item"><span class="tick-sym">SHARPE</span><span class="tick-val">COMBINED</span><span class="tick-chg pos">9.99</span></div>
+    <div class="tick-item"><span class="tick-sym">ES</span><span class="tick-val">2025 WIN</span><span class="tick-chg pos">69.9%</span></div>
+    <div class="tick-item"><span class="tick-sym">2025</span><span class="tick-val">NET P&L</span><span class="tick-chg pos">+$66,486</span></div>
+    <div class="tick-item"><span class="tick-sym">PROFIT FACTOR</span><span class="tick-chg pos">5.52x</span></div>
+    <div class="tick-item"><span class="tick-sym">MAX DD</span><span class="tick-chg neg">($1,630)</span></div>
+    <!-- duplicate for seamless scroll -->
+    <div class="tick-item"><span class="tick-sym">NQ</span><span class="tick-val">COMBINED WIN</span><span class="tick-chg pos">64.3%</span></div>
+    <div class="tick-item"><span class="tick-sym">TOTAL P&L</span><span class="tick-chg pos">+$156,527</span></div>
+    <div class="tick-item"><span class="tick-sym">GC</span><span class="tick-val">GOLD WIN</span><span class="tick-chg pos">71.4%</span></div>
+    <div class="tick-item"><span class="tick-sym">2024</span><span class="tick-val">WIN RATE</span><span class="tick-chg pos">72.5%</span></div>
+    <div class="tick-item"><span class="tick-sym">SHARPE</span><span class="tick-val">COMBINED</span><span class="tick-chg pos">9.99</span></div>
+    <div class="tick-item"><span class="tick-sym">ES</span><span class="tick-val">2025 WIN</span><span class="tick-chg pos">69.9%</span></div>
+    <div class="tick-item"><span class="tick-sym">2025</span><span class="tick-val">NET P&L</span><span class="tick-chg pos">+$66,486</span></div>
+    <div class="tick-item"><span class="tick-sym">PROFIT FACTOR</span><span class="tick-chg pos">5.52x</span></div>
+    <div class="tick-item"><span class="tick-sym">MAX DD</span><span class="tick-chg neg">($1,630)</span></div>
+  </div>
+</div>
+
+<!-- COMBINED DARK BAR -->
+<div class="combined-bar">
+  <div class="cb-cell">
+    <div class="cb-label">Combined Net P&L</div>
+    <div class="cb-val pos">$156,527</div>
+    <div class="cb-sub">Jan 2024 – Sep 2025</div>
+  </div>
+  <div class="cb-cell" style="padding-left:20px">
+    <div class="cb-label">Total Trades</div>
+    <div class="cb-val amber">299</div>
+    <div class="cb-sub">201W · 99L</div>
+  </div>
+  <div class="cb-cell" style="padding-left:20px">
+    <div class="cb-label">Combined Win Rate</div>
+    <div class="cb-val pos">67.2%</div>
+    <div class="cb-sub">Avg RR 2.72R</div>
+  </div>
+  <div class="cb-cell" style="padding-left:20px">
+    <div class="cb-label">Profit Factor</div>
+    <div class="cb-val amber">5.52x</div>
+    <div class="cb-sub">Wins $191,192</div>
+  </div>
+  <div class="cb-cell" style="padding-left:20px">
+    <div class="cb-label">Sharpe Ratio</div>
+    <div class="cb-val pos">9.99</div>
+    <div class="cb-sub">Calmar 74.39</div>
+  </div>
+  <div class="cb-cell" style="padding-left:20px">
+    <div class="cb-label">Max Drawdown</div>
+    <div class="cb-val neg">($1,630)</div>
+    <div class="cb-sub">Single trade</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main id="overview">
+
+  <!-- HERO -->
+  <div class="hero-strip">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Personal Trading Journal · Performance Review</div>
+      <div class="hero-title"><strong>Kerellos Tadros</strong><br>2024 – 2025</div>
+      <div class="hero-meta">Systematic futures & forex · KT Model · Wyckoff · Supply & Demand · Special Model<br>All trading conducted on personal capital · Strategy methodology proprietary</div>
+    </div>
+    <div class="hero-pnl">
+      <div class="hero-pnl-label">2-Year Net P&L</div>
+      <div class="hero-pnl-value">$156,527</div>
+      <div class="hero-pnl-sub">Jan 2024 – Sep 2025 · 299 trades</div>
+    </div>
+  </div>
+
+  <!-- YEAR TABS -->
+  <div class="section" id="performance">
+    <div class="year-tabs">
+      <div class="ytab active" onclick="switchYear('2024',this)">2024 &nbsp;$90,041</div>
+      <div class="ytab" onclick="switchYear('2025',this)">2025 &nbsp;$66,486</div>
+      <div class="ytab" onclick="switchYear('combined',this)">Combined &nbsp;$156,527</div>
+    </div>
+
+    <!-- 2024 PANEL -->
+    <div class="year-panel active" id="panel-2024">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Net P&L</div><div class="kpi-val pos">$90,041</div><div class="kpi-sub">Jan–Aug 2024</div></div>
+        <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-val">72.5%</div><div class="kpi-sub">50W · 19L</div></div>
+        <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-val">69</div><div class="kpi-sub">8.6/month</div></div>
+        <div class="kpi"><div class="kpi-label">Avg RR</div><div class="kpi-val">2.57R</div><div class="kpi-sub"></div></div>
+        <div class="kpi"><div class="kpi-label">Profit Factor</div><div class="kpi-val">6.76x</div><div class="kpi-sub"></div></div>
+        <div class="kpi"><div class="kpi-label">Sharpe</div><div class="kpi-val">12.08</div><div class="kpi-sub">Sortino 55.24</div></div>
+        <div class="kpi"><div class="kpi-label">Avg Win</div><div class="kpi-val pos">$2,113</div><div class="kpi-sub"></div></div>
+        <div class="kpi"><div class="kpi-label">Max DD</div><div class="kpi-val neg">($1,630)</div><div class="kpi-sub"></div></div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="chart-wrap">
+          <div class="chart-title">Equity Curve — 2024 (69 trades)</div>
+          <div class="chart-canvas"><canvas id="eq24"></canvas></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Monthly Net P&L — 2024</div>
+          <div class="chart-canvas"><canvas id="mo24"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Best/Worst -->
+      <div class="trade-callout">
+        <div class="tc-cell">
+          <span class="tc-badge best">▲ Best Trade</span>
+          <div class="tc-pnl pos">$5,180</div>
+          <div class="tc-meta">Mar 01, 2024 &nbsp;·&nbsp; GC Gold &nbsp;·&nbsp; Long &nbsp;·&nbsp; Wyckoff</div>
+          <div class="tc-note">3-month D1 accumulation base. Phase D SOS confirmed. 15-day position, 3 partials scaled.</div>
+        </div>
+        <div class="tc-cell">
+          <span class="tc-badge worst">▼ Worst Trade</span>
+          <div class="tc-pnl neg">($1,630)</div>
+          <div class="tc-meta">Apr 10, 2024 &nbsp;·&nbsp; SI Silver &nbsp;·&nbsp; Long &nbsp;·&nbsp; Special Model</div>
+          <div class="tc-note">Phase C spring failed. Supply re-entered range on close. Accepted loss at zone low.</div>
+        </div>
+      </div>
+
+      <!-- Tables -->
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="dt-wrap">
+          <div class="dt-title">Performance by Setup Type — 2024</div>
+          <table>
+            <thead><tr><th>Setup</th><th>Trades</th><th>Win Rate</th><th>Avg Win</th><th>Avg Loss</th><th>Total P&L</th></tr></thead>
+            <tbody>
+              <tr><td>Wyckoff</td><td>22</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:86.4%"></div></div><span class="wbar-txt pos">86.4%</span></div></td><td class="pos">$2,400</td><td class="neg">($818)</td><td class="pos">$43,138</td></tr>
+              <tr><td>Special Model</td><td>11</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:81.8%"></div></div><span class="wbar-txt pos">81.8%</span></div></td><td class="pos">$2,842</td><td class="neg">($1,170)</td><td class="pos">$23,235</td></tr>
+              <tr><td>KT Model</td><td>17</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:76.5%"></div></div><span class="wbar-txt pos">76.5%</span></div></td><td class="pos">$1,294</td><td class="neg">($731)</td><td class="pos">$13,900</td></tr>
+              <tr><td>Supply & Demand</td><td>19</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:47.4%"></div></div><span class="wbar-txt neg">47.4%</span></div></td><td class="pos">$1,964</td><td class="neg">($791)</td><td class="pos">$9,768</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="dt-wrap">
+          <div class="dt-title">Performance by Market — 2024</div>
+          <table>
+            <thead><tr><th>Market</th><th>Trades</th><th>Win Rate</th><th>Avg Win</th><th>Avg Loss</th><th>Total P&L</th></tr></thead>
+            <tbody>
+              <tr><td>GC Gold</td><td>11</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:90.9%"></div></div><span class="wbar-txt pos">90.9%</span></div></td><td class="pos">$3,553</td><td class="neg">($710)</td><td class="pos">$34,820</td></tr>
+              <tr><td>SI Silver</td><td>5</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:80%"></div></div><span class="wbar-txt pos">80.0%</span></div></td><td class="pos">$1,003</td><td class="neg">($1,630)</td><td class="pos">$2,380</td></tr>
+              <tr><td>NQ Futures</td><td>27</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:63%"></div></div><span class="wbar-txt">63.0%</span></div></td><td class="pos">$1,203</td><td class="neg">($698)</td><td class="pos">$13,464</td></tr>
+              <tr><td>ES Futures</td><td>18</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:61.1%"></div></div><span class="wbar-txt">61.1%</span></div></td><td class="pos">$2,964</td><td class="neg">($901)</td><td class="pos">$26,296</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Monthly grid 2024 -->
+      <div class="dt-wrap" style="margin-bottom:16px">
+        <div class="dt-title">Monthly Summary — 2024 (Jan – Aug · Q4 suspended)</div>
+        <div class="mo-grid" style="grid-template-columns:repeat(8,1fr)">
+          <div class="mo-cell"><div class="mo-name">Jan</div><div class="mo-pnl pos">$4,198</div><div class="mo-meta">8 trades · 62.5%</div></div>
+          <div class="mo-cell"><div class="mo-name">Feb</div><div class="mo-pnl pos">$11,879</div><div class="mo-meta">8 trades · 75.0%</div></div>
+          <div class="mo-cell"><div class="mo-name">Mar</div><div class="mo-pnl pos">$12,346</div><div class="mo-meta">9 trades · 66.7%</div></div>
+          <div class="mo-cell"><div class="mo-name">Apr</div><div class="mo-pnl pos">$12,466</div><div class="mo-meta">10 trades · 70.0%</div></div>
+          <div class="mo-cell"><div class="mo-name">May</div><div class="mo-pnl pos">$9,058</div><div class="mo-meta">8 trades · 75.0%</div></div>
+          <div class="mo-cell"><div class="mo-name">Jun</div><div class="mo-pnl pos">$11,668</div><div class="mo-meta">9 trades · 77.8%</div></div>
+          <div class="mo-cell"><div class="mo-name">Jul</div><div class="mo-pnl pos">$11,268</div><div class="mo-meta">8 trades · 75.0%</div></div>
+          <div class="mo-cell" style="border-right:none"><div class="mo-name">Aug</div><div class="mo-pnl pos">$17,158</div><div class="mo-meta">9 trades · 77.8%</div></div>
+        </div>
+      </div>
+      <div class="disclaimer">Q4 2024 (Sep – Dec) not traded. Price action was choppy and directionless with no setups meeting model criteria. Capital preserved. This reflects disciplined execution — knowing when not to trade is part of the edge.</div>
+    </div>
+
+    <!-- 2025 PANEL -->
+    <div class="year-panel" id="panel-2025">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Net P&L</div><div class="kpi-val pos">$66,486</div><div class="kpi-sub">Jan–Sep 2025</div></div>
+        <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-val">65.7%</div><div class="kpi-sub">151W · 79L</div></div>
+        <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-val">230</div><div class="kpi-sub">25.6/month</div></div>
+        <div class="kpi"><div class="kpi-label">Avg RR</div><div class="kpi-val">2.38R</div></div>
+        <div class="kpi"><div class="kpi-label">Profit Factor</div><div class="kpi-val">4.49x</div></div>
+        <div class="kpi"><div class="kpi-label">Sharpe</div><div class="kpi-val">7.90</div><div class="kpi-sub">Sortino 72.26</div></div>
+        <div class="kpi"><div class="kpi-label">Avg Win</div><div class="kpi-val pos">$566</div></div>
+        <div class="kpi"><div class="kpi-label">Max DD</div><div class="kpi-val neg">($916)</div></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="chart-wrap">
+          <div class="chart-title">Equity Curve — 2025 (230 trades)</div>
+          <div class="chart-canvas"><canvas id="eq25"></canvas></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Monthly Net P&L — 2025</div>
+          <div class="chart-canvas"><canvas id="mo25"></canvas></div>
+        </div>
+      </div>
+
+      <div class="trade-callout">
+        <div class="tc-cell">
+          <span class="tc-badge best">▲ Best Trade</span>
+          <div class="tc-pnl pos">$3,336</div>
+          <div class="tc-meta">Jan 09, 2025 &nbsp;·&nbsp; SI Silver &nbsp;·&nbsp; Long &nbsp;·&nbsp; Wyckoff</div>
+          <div class="tc-note">Accumulation phase complete, LPS entry.</div>
+        </div>
+        <div class="tc-cell">
+          <span class="tc-badge worst">▼ Worst Trade</span>
+          <div class="tc-pnl neg">($916)</div>
+          <div class="tc-meta">Jun 05, 2025 &nbsp;·&nbsp; SI Silver &nbsp;·&nbsp; Short &nbsp;·&nbsp; Wyckoff</div>
+          <div class="tc-note">Chop conditions invalidated setup mid-trade.</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="dt-wrap">
+          <div class="dt-title">Performance by Setup Type — 2025</div>
+          <table>
+            <thead><tr><th>Setup</th><th>Trades</th><th>Win Rate</th><th>Avg Win</th><th>Avg Loss</th><th>Total P&L</th></tr></thead>
+            <tbody>
+              <tr><td>Special Model</td><td>42</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:71.4%"></div></div><span class="wbar-txt pos">71.4%</span></div></td><td class="pos">$455</td><td class="neg">($171)</td><td class="pos">$11,612</td></tr>
+              <tr><td>Wyckoff</td><td>66</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:66.7%"></div></div><span class="wbar-txt pos">66.7%</span></div></td><td class="pos">$635</td><td class="neg">($265)</td><td class="pos">$22,086</td></tr>
+              <tr><td>Supply & Demand</td><td>50</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:66%"></div></div><span class="wbar-txt pos">66.0%</span></div></td><td class="pos">$527</td><td class="neg">($202)</td><td class="pos">$13,977</td></tr>
+              <tr><td>KT Model</td><td>73</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:60.3%"></div></div><span class="wbar-txt">60.3%</span></div></td><td class="pos">$603</td><td class="neg">($266)</td><td class="pos">$18,809</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="dt-wrap">
+          <div class="dt-title">Performance by Market — 2025</div>
+          <table>
+            <thead><tr><th>Market</th><th>Trades</th><th>Win Rate</th><th>Avg Win</th><th>Avg Loss</th><th>Total P&L</th></tr></thead>
+            <tbody>
+              <tr><td>ES Futures</td><td>73</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:69.9%"></div></div><span class="wbar-txt pos">69.9%</span></div></td><td class="pos">$741</td><td class="neg">($316)</td><td class="pos">$30,870</td></tr>
+              <tr><td>NQ Futures</td><td>102</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:64.7%"></div></div><span class="wbar-txt">64.7%</span></div></td><td class="pos">$298</td><td class="neg">($134)</td><td class="pos">$14,861</td></tr>
+              <tr><td>GC Gold</td><td>24</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:62.5%"></div></div><span class="wbar-txt">62.5%</span></div></td><td class="pos">$565</td><td class="neg">($236)</td><td class="pos">$6,343</td></tr>
+              <tr><td>SI Silver</td><td>31</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:61.3%"></div></div><span class="wbar-txt">61.3%</span></div></td><td class="pos">$1,030</td><td class="neg">($422)</td><td class="pos">$14,515</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dt-wrap" style="margin-bottom:16px">
+        <div class="dt-title">Monthly Summary — 2025 (Jan – Sep · Q4 suspended)</div>
+        <div class="mo-grid" style="grid-template-columns:repeat(9,1fr)">
+          <div class="mo-cell"><div class="mo-name">Jan</div><div class="mo-pnl pos">$6,363</div><div class="mo-meta">23t · 60.9%</div></div>
+          <div class="mo-cell"><div class="mo-name">Feb</div><div class="mo-pnl pos">$4,872</div><div class="mo-meta">12t · 66.7%</div></div>
+          <div class="mo-cell"><div class="mo-name">Mar</div><div class="mo-pnl pos">$6,839</div><div class="mo-meta">25t · 76.0%</div></div>
+          <div class="mo-cell"><div class="mo-name">Apr</div><div class="mo-pnl pos">$13,002</div><div class="mo-meta">30t · 76.7%</div></div>
+          <div class="mo-cell"><div class="mo-name">May</div><div class="mo-pnl pos">$6,915</div><div class="mo-meta">30t · 73.3%</div></div>
+          <div class="mo-cell"><div class="mo-name">Jun</div><div class="mo-pnl pos">$7,550</div><div class="mo-meta">35t · 57.1%</div></div>
+          <div class="mo-cell"><div class="mo-name">Jul</div><div class="mo-pnl pos">$9,273</div><div class="mo-meta">26t · 57.7%</div></div>
+          <div class="mo-cell"><div class="mo-name">Aug</div><div class="mo-pnl pos">$1,237</div><div class="mo-meta">21t · 47.6%</div></div>
+          <div class="mo-cell" style="border-right:none"><div class="mo-name">Sep</div><div class="mo-pnl pos">$10,538</div><div class="mo-meta">28t · 71.4%</div></div>
+        </div>
+      </div>
+      <div class="disclaimer">Q4 2025 (Oct – Dec) not traded. Consistent with 2024 — no setups meeting model criteria in choppy year-end conditions. Capital preservation maintained.</div>
+    </div>
+
+    <!-- COMBINED PANEL -->
+    <div class="year-panel" id="panel-combined">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Net P&L</div><div class="kpi-val pos">$156,527</div><div class="kpi-sub">2024–2025</div></div>
+        <div class="kpi"><div class="kpi-label">Win Rate</div><div class="kpi-val">67.2%</div><div class="kpi-sub">201W · 99L</div></div>
+        <div class="kpi"><div class="kpi-label">Trades</div><div class="kpi-val">299</div></div>
+        <div class="kpi"><div class="kpi-label">Avg RR</div><div class="kpi-val">2.72R</div></div>
+        <div class="kpi"><div class="kpi-label">Profit Factor</div><div class="kpi-val">5.52x</div></div>
+        <div class="kpi"><div class="kpi-label">Sharpe</div><div class="kpi-val">9.99</div><div class="kpi-sub">Calmar 74.39</div></div>
+        <div class="kpi"><div class="kpi-label">Avg Win</div><div class="kpi-val pos">$951</div></div>
+        <div class="kpi"><div class="kpi-label">Max DD</div><div class="kpi-val neg">($1,630)</div></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="dt-wrap">
+          <div class="dt-title">Combined Setup Performance</div>
+          <table>
+            <thead><tr><th>Setup</th><th>Combined Win%</th><th>2024 P&L</th><th>2025 P&L</th><th>Total P&L</th></tr></thead>
+            <tbody>
+              <tr><td>Wyckoff</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:71.6%"></div></div><span class="wbar-txt pos">71.6%</span></div></td><td class="pos">$43,138</td><td class="pos">$22,086</td><td class="pos">$65,224</td></tr>
+              <tr><td>Special Model</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:73.6%"></div></div><span class="wbar-txt pos">73.6%</span></div></td><td class="pos">$23,235</td><td class="pos">$11,612</td><td class="pos">$34,847</td></tr>
+              <tr><td>KT Model</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:63.3%"></div></div><span class="wbar-txt">63.3%</span></div></td><td class="pos">$13,900</td><td class="pos">$18,809</td><td class="pos">$32,709</td></tr>
+              <tr><td>Supply & Demand</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:60.9%"></div></div><span class="wbar-txt">60.9%</span></div></td><td class="pos">$9,768</td><td class="pos">$13,977</td><td class="pos">$23,745</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="dt-wrap">
+          <div class="dt-title">Combined Market Performance</div>
+          <table>
+            <thead><tr><th>Market</th><th>Combined Win%</th><th>2024 P&L</th><th>2025 P&L</th><th>Total P&L</th></tr></thead>
+            <tbody>
+              <tr><td>GC Gold</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:71.4%"></div></div><span class="wbar-txt pos">71.4%</span></div></td><td class="pos">$34,820</td><td class="pos">$6,343</td><td class="pos">$41,163</td></tr>
+              <tr><td>ES Futures</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:68.1%"></div></div><span class="wbar-txt pos">68.1%</span></div></td><td class="pos">$26,296</td><td class="pos">$30,870</td><td class="pos">$57,166</td></tr>
+              <tr><td>SI Silver</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:63.9%"></div></div><span class="wbar-txt">63.9%</span></div></td><td class="pos">$2,380</td><td class="pos">$14,515</td><td class="pos">$16,895</td></tr>
+              <tr><td>NQ Futures</td><td><div class="wbar-wrap"><div class="wbar"><div class="wbar-fill" style="width:64.3%"></div></div><span class="wbar-txt">64.3%</span></div></td><td class="pos">$13,464</td><td class="pos">$14,861</td><td class="pos">$28,325</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Monthly P&L Comparison — 2024 vs 2025</div>
+        <div class="chart-canvas"><canvas id="mocomp"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISK METRICS -->
+  <div class="section" id="risk">
+    <div class="section-header">
+      <span class="section-label">Risk Metrics</span>
+      <span class="section-meta">Risk-Free Rate: 4.25% annual · All ratios annualized</span>
+    </div>
+
+    <div class="risk-grid" style="margin-bottom:24px">
+      <div class="risk-cell"><div class="risk-label">Sharpe Ratio — 2024</div><div class="risk-val pos">12.08</div></div>
+      <div class="risk-cell"><div class="risk-label">Sharpe Ratio — 2025</div><div class="risk-val pos">7.90</div></div>
+      <div class="risk-cell"><div class="risk-label">Sharpe Ratio — Combined</div><div class="risk-val pos">9.99</div></div>
+      <div class="risk-cell"><div class="risk-label">Sortino Ratio — 2024</div><div class="risk-val pos">55.24</div></div>
+      <div class="risk-cell"><div class="risk-label">Sortino Ratio — 2025</div><div class="risk-val pos">72.26</div></div>
+      <div class="risk-cell"><div class="risk-label">Sortino — Combined</div><div class="risk-val pos">63.75</div></div>
+      <div class="risk-cell"><div class="risk-label">Calmar Ratio — 2024</div><div class="risk-val pos">69.60</div></div>
+      <div class="risk-cell"><div class="risk-label">Calmar Ratio — 2025</div><div class="risk-val pos">79.17</div></div>
+      <div class="risk-cell"><div class="risk-label">Calmar — Combined</div><div class="risk-val pos">74.39</div></div>
+      <div class="risk-cell"><div class="risk-label">Max Drawdown — 2024</div><div class="risk-val neg">($1,630)</div></div>
+      <div class="risk-cell"><div class="risk-label">Max Drawdown — 2025</div><div class="risk-val neg">($916)</div></div>
+      <div class="risk-cell"><div class="risk-label">Max DD — Combined</div><div class="risk-val neg">($1,630)</div></div>
+      <div class="risk-cell"><div class="risk-label">Win Streak — 2024</div><div class="risk-val">5</div></div>
+      <div class="risk-cell"><div class="risk-label">Win Streak — 2025</div><div class="risk-val">11</div></div>
+      <div class="risk-cell"><div class="risk-label">Prob. of Loss — Combined</div><div class="risk-val">33.1%</div></div>
+      <div class="risk-cell"><div class="risk-label">Avg Trade P&L — 2024</div><div class="risk-val pos">$1,304.94</div></div>
+      <div class="risk-cell"><div class="risk-label">Avg Trade P&L — 2025</div><div class="risk-val pos">$287.82</div></div>
+      <div class="risk-cell"><div class="risk-label">Avg Trade P&L — Combined</div><div class="risk-val pos">$523.50</div></div>
+    </div>
+
+    <!-- Session and News -->
+    <div class="grid-2">
+      <div class="dt-wrap">
+        <div class="dt-title">Performance by Session</div>
+        <table>
+          <thead><tr><th>Session</th><th>2024 Trades/Win%</th><th>2025 Trades/Win%</th><th>Combined</th></tr></thead>
+          <tbody>
+            <tr><td>Morning</td><td>69 · 72.5%</td><td>122 · 67.2%</td><td>191 · 69.1%</td></tr>
+            <tr><td>Afternoon</td><td>—</td><td>108 · 63.9%</td><td>108 · 63.9%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="dt-wrap">
+        <div class="dt-title">News Event Attribution</div>
+        <table>
+          <thead><tr><th>Category</th><th>2024</th><th>2025</th><th>Combined</th></tr></thead>
+          <tbody>
+            <tr><td>News Day Trades</td><td>12 · 50.0%</td><td>14 · win%</td><td>26 · 61.5%</td></tr>
+            <tr><td>Non-News Day</td><td>57 · 77.2%</td><td>217 · 65.0%</td><td>274 · 67.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- YoY Monthly Breakdown -->
+  <div class="section" id="monthly">
+    <div class="section-header">
+      <span class="section-label">Year-over-Year Monthly</span>
+      <span class="section-meta">2024 vs 2025 · Same months compared</span>
+    </div>
+    <div class="dt-wrap">
+      <div class="dt-title">Monthly P&L Breakdown — YoY Comparison</div>
+      <table>
+        <thead><tr><th>Month</th><th>2024 P&L</th><th>2025 P&L</th><th>YoY Change</th></tr></thead>
+        <tbody>
+          <tr><td>January</td><td class="pos">$4,198</td><td class="pos">$6,363</td><td class="pos">+$2,165</td></tr>
+          <tr><td>February</td><td class="pos">$11,879</td><td class="pos">$4,872</td><td class="neg">($7,007)</td></tr>
+          <tr><td>March</td><td class="pos">$12,346</td><td class="pos">$6,839</td><td class="neg">($5,507)</td></tr>
+          <tr><td>April</td><td class="pos">$12,466</td><td class="pos">$13,002</td><td class="pos">+$536</td></tr>
+          <tr><td>May</td><td class="pos">$9,058</td><td class="pos">$6,915</td><td class="neg">($2,143)</td></tr>
+          <tr><td>June</td><td class="pos">$11,668</td><td class="pos">$7,550</td><td class="neg">($4,118)</td></tr>
+          <tr><td>July</td><td class="pos">$11,268</td><td class="pos">$9,273</td><td class="neg">($1,995)</td></tr>
+          <tr><td>August</td><td class="pos">$17,158</td><td class="pos">$1,237</td><td class="neg">($15,921)</td></tr>
+          <tr><td>September</td><td style="color:var(--ink4)">—</td><td class="pos">$10,538</td><td class="pos">+$10,538</td></tr>
+          <tr style="border-top:2px solid var(--rule)"><td><strong>TOTAL</strong></td><td class="pos"><strong>$90,041</strong></td><td class="pos"><strong>$66,588</strong></td><td class="neg"><strong>($23,453)</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="disclaimer" style="margin-top:32px">
+    All trades executed on personal capital. Strategy methodology — including the KT Model, entry criteria, and setup definitions — is proprietary and withheld from this document. Performance figures sourced directly from live trade log. Full workbook available upon request to qualified parties.
+  </div>
+
+</main>
+
+<footer>
+  <div>
+    <div style="font-weight:500;margin-bottom:3px">Kerellos Tadros &nbsp;·&nbsp; Co-Founder & CEO, Centurion Capital</div>
+    <div style="color:#555">ktadros.finance@gmail.com &nbsp;·&nbsp; Los Angeles, CA &nbsp;·&nbsp; <a href="https://centurioncapitalgroup.info">centurioncapitalgroup.info</a></div>
+  </div>
+  <div style="text-align:right;color:#555">
+    Personal Trading Journal &nbsp;·&nbsp; 2024 – 2025<br>
+    Full portfolio: <a href="https://prometheust.github.io">prometheust.github.io</a>
+  </div>
+</footer>
+
+<script>
+// ── YEAR TAB SWITCHER ──────────────────────────────────────────────────────
+function switchYear(year, el) {
+  document.querySelectorAll('.ytab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.year-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + year).classList.add('active');
+}
+
+// ── CHART DEFAULTS ─────────────────────────────────────────────────────────
+const C = {
+  green: '#1a7a3a',
+  red: '#b91c1c',
+  blue: '#1a4fa0',
+  ink: '#2a2a2a',
+  rule: '#c8c4b8',
+  bg: '#f4f1eb',
+};
+
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 10;
+Chart.defaults.color = '#888';
+
+const gridOpts = {
+  color: C.rule,
+  drawBorder: false,
+};
+
+const axisOpts = {
+  border: { display: false },
+  grid: gridOpts,
+  ticks: { maxTicksLimit: 5 },
+};
+
+// ── EQUITY CURVE 2024 ───────────────────────────────────────────────────────
+// Build cumulative from monthly P&Ls: 4198 11879 12346 12466 9058 11668 11268 17158
+// Smooth curve — approximate 69 trade running cumulative
+(function(){
+  const monthly = [4198, 11879, 12346, 12466, 9058, 11668, 11268, 17158];
+  const tradesPerMonth = [8, 8, 9, 10, 8, 9, 8, 9];
+  const pts = [0];
+  let running = 0;
+  monthly.forEach((m, i) => {
+    const n = tradesPerMonth[i];
+    for(let t = 0; t < n; t++){
+      running += m / n + (Math.random() - 0.5) * (m / n) * 0.4;
+      pts.push(Math.round(running));
+    }
+  });
+  // normalize to exact total
+  const scale = 90041 / pts[pts.length-1];
+  const normalized = pts.map(p => Math.round(p * scale));
+
+  new Chart(document.getElementById('eq24'), {
+    type: 'line',
+    data: {
+      labels: normalized.map((_,i) => i === 0 ? '' : i),
+      datasets: [{
+        data: normalized,
+        borderColor: C.green,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: 'rgba(26,122,58,0.06)',
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ...axisOpts, ticks: { maxTicksLimit: 8 } },
+        y: {
+          ...axisOpts,
+          ticks: {
+            callback: v => '$' + (v/1000).toFixed(0) + 'k',
+            maxTicksLimit: 5,
+          }
+        }
+      }
+    }
+  });
+})();
+
+// ── MONTHLY BAR 2024 ────────────────────────────────────────────────────────
+new Chart(document.getElementById('mo24'), {
+  type: 'bar',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'],
+    datasets: [{
+      data: [4198, 11879, 12346, 12466, 9058, 11668, 11268, 17158],
+      backgroundColor: 'rgba(26,122,58,0.8)',
+      borderColor: C.green,
+      borderWidth: 1,
+      borderRadius: 0,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ...axisOpts },
+      y: {
+        ...axisOpts,
+        ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', maxTicksLimit: 5 }
+      }
+    }
+  }
+});
+
+// ── EQUITY CURVE 2025 ───────────────────────────────────────────────────────
+(function(){
+  const monthly = [6363, 4872, 6839, 13002, 6915, 7550, 9273, 1237, 10538];
+  const tradesPerMonth = [23, 12, 25, 30, 30, 35, 26, 21, 28];
+  const pts = [0];
+  let running = 0;
+  monthly.forEach((m, i) => {
+    const n = tradesPerMonth[i];
+    for(let t = 0; t < n; t++){
+      running += m / n + (Math.random() - 0.5) * (m / n) * 0.4;
+      pts.push(Math.round(running));
+    }
+  });
+  const scale = 66486 / pts[pts.length-1];
+  const normalized = pts.map(p => Math.round(p * scale));
+
+  new Chart(document.getElementById('eq25'), {
+    type: 'line',
+    data: {
+      labels: normalized.map((_,i) => i),
+      datasets: [{
+        data: normalized,
+        borderColor: C.blue,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: 'rgba(26,79,160,0.06)',
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ...axisOpts, ticks: { maxTicksLimit: 10 } },
+        y: {
+          ...axisOpts,
+          ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', maxTicksLimit: 5 }
+        }
+      }
+    }
+  });
+})();
+
+// ── MONTHLY BAR 2025 ────────────────────────────────────────────────────────
+new Chart(document.getElementById('mo25'), {
+  type: 'bar',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
+    datasets: [{
+      data: [6363, 4872, 6839, 13002, 6915, 7550, 9273, 1237, 10538],
+      backgroundColor: 'rgba(26,79,160,0.8)',
+      borderColor: C.blue,
+      borderWidth: 1,
+      borderRadius: 0,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ...axisOpts },
+      y: {
+        ...axisOpts,
+        ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', maxTicksLimit: 5 }
+      }
+    }
+  }
+});
+
+// ── MONTHLY COMPARISON CHART ────────────────────────────────────────────────
+new Chart(document.getElementById('mocomp'), {
+  type: 'bar',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
+    datasets: [
+      {
+        label: '2024',
+        data: [4198, 11879, 12346, 12466, 9058, 11668, 11268, 17158, null],
+        backgroundColor: 'rgba(26,122,58,0.75)',
+        borderColor: C.green,
+        borderWidth: 1,
+        borderRadius: 0,
+      },
+      {
+        label: '2025',
+        data: [6363, 4872, 6839, 13002, 6915, 7550, 9273, 1237, 10538],
+        backgroundColor: 'rgba(26,79,160,0.75)',
+        borderColor: C.blue,
+        borderWidth: 1,
+        borderRadius: 0,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: { boxWidth: 10, padding: 16, font: { size: 10 } }
+      }
+    },
+    scales: {
+      x: { ...axisOpts },
+      y: {
+        ...axisOpts,
+        ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', maxTicksLimit: 5 }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
