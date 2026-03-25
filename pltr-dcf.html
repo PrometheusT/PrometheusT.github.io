@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLTR DCF | Kerellos Tadros — Centurion Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f2ec;
+  --bg2:#eceae3;
+  --bg3:#e4e1d9;
+  --ink:#0a0a0a;
+  --ink2:#2a2a2a;
+  --ink3:#555;
+  --ink4:#888;
+  --rule:#ccc9bf;
+  --rule2:rgba(0,0,0,0.06);
+  --green:#1b5e20;
+  --green-bg:#e8f5e9;
+  --green-light:#f1f8f1;
+  --red:#b71c1c;
+  --red-bg:#ffebee;
+  --blue:#0d47a1;
+  --blue-bg:#e3f2fd;
+  --header:#1a1a1a;
+  --section:#2d4a3e;
+  --input:#1b4f72;
+  --yellow:#fff9c4;
+  --muted:#666;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  line-height:1.5;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:99;
+  background:rgba(26,26,26,0.97);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:48px;
+  border-bottom:1px solid #333;
+}
+.nav-logo{font-size:11px;font-weight:500;color:#f5f2ec;letter-spacing:0.08em}
+.nav-links{display:flex;gap:0}
+.nav-link{
+  color:#aaa;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  padding:0 14px;height:48px;display:flex;align-items:center;
+  text-decoration:none;border-right:1px solid #333;transition:color 0.15s,background 0.15s;
+}
+.nav-link:first-child{border-left:1px solid #333}
+.nav-link:hover{color:#f5f2ec;background:rgba(255,255,255,0.05)}
+.nav-right{font-size:10px;color:#666;letter-spacing:0.06em}
+
+/* SECTIONS */
+.page{padding:0 40px 64px}
+
+/* COVER */
+.cover-hero{
+  background:var(--header);
+  margin:0 -40px;
+  padding:40px 40px 32px;
+}
+.cover-ticker{font-size:9px;letter-spacing:0.2em;color:#666;margin-bottom:8px;text-transform:uppercase}
+.cover-title{font-family:'IBM Plex Sans',sans-serif;font-size:28px;font-weight:300;color:#f5f2ec;line-height:1.1;margin-bottom:6px}
+.cover-subtitle{font-size:11px;color:#8fa8b8;margin-bottom:24px}
+.cover-meta{
+  display:grid;grid-template-columns:160px 1fr;
+  border:1px solid #333;overflow:hidden;max-width:560px;
+}
+.cm-label{
+  background:#2d4a3e;color:#f5f2ec;padding:9px 14px;
+  font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  border-bottom:1px solid #3a3a3a;
+}
+.cm-label:last-of-type{border-bottom:none}
+.cm-val{
+  background:#111;color:#d8d4cc;padding:9px 14px;
+  font-size:10px;border-bottom:1px solid #1e1e1e;
+}
+.cm-val:last-child{border-bottom:none}
+.cm-val.price{color:#4caf50;font-weight:500}
+
+/* THESIS BOX */
+.thesis-section{margin:24px 0 0}
+.thesis-header{
+  background:var(--section);color:#fff;
+  padding:10px 16px;font-size:9px;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;
+  border-left:4px solid #4caf50;
+}
+.thesis-row{padding:14px 16px;border-bottom:1px solid var(--rule2);font-size:10px;line-height:1.7}
+.thesis-row:last-child{border-bottom:none}
+.thesis-row.bull{background:var(--green-bg);color:var(--green);font-weight:500}
+.thesis-row.normal{background:var(--bg2);color:var(--ink2);font-style:italic}
+.thesis-row.catalyst{background:#d4edda;color:var(--green)}
+.thesis-row.numbers{background:var(--blue-bg);color:var(--blue);font-style:italic}
+.thesis-row.caution{background:#fff8f0;color:var(--ink3);font-style:italic;border:1px solid var(--rule)}
+
+/* SECTION TITLES */
+.sec-title{
+  margin:32px 0 0;
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:#fff;background:var(--header);
+  padding:10px 14px;
+  border-left:4px solid #4caf50;
+}
+.sec-sub{
+  font-size:9px;letter-spacing:0.1em;color:#fff;
+  background:var(--section);padding:8px 14px;
+  margin-bottom:0;
+}
+
+/* TABLES */
+.tbl-wrap{border:1px solid var(--rule);overflow:hidden;margin-bottom:0}
+.tbl-source{
+  font-size:8px;italic;color:var(--muted);
+  padding:5px 10px;background:var(--bg2);
+  border-bottom:1px solid var(--rule);font-style:italic;
+  text-align:center;
+}
+table{width:100%;border-collapse:collapse}
+th{
+  padding:8px 10px;font-size:8px;letter-spacing:0.1em;
+  text-transform:uppercase;font-weight:500;color:#fff;
+  background:#1a1a1a;text-align:right;border-right:1px solid #333;
+  white-space:nowrap;
+}
+th:first-child{text-align:left;background:#111}
+th.hist{background:#1c3a2e}
+th.proj{background:#2d4a3e}
+td{
+  padding:7px 10px;border-bottom:1px solid var(--rule2);
+  border-right:1px solid var(--rule2);
+  font-size:10px;color:var(--ink2);text-align:right;
+  white-space:nowrap;
+}
+td:first-child{text-align:left;background:var(--bg2);font-size:10px;color:var(--ink)}
+td.input{color:var(--input);font-weight:500}
+td.pos{color:var(--green);font-weight:500}
+td.neg{color:var(--red);font-weight:500}
+td.bold{font-weight:600;color:var(--ink)}
+td.pct{color:var(--muted)}
+td.pct.pos{color:var(--green)}
+td.pct.neg{color:var(--red)}
+tr.total td{background:var(--bg3);font-weight:600}
+tr.total td:first-child{background:#dedad2}
+tr.section-row td{
+  background:var(--section);color:#fff;font-weight:600;
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:6px 10px;
+}
+tr:hover td{filter:brightness(0.97)}
+tr:last-child td{border-bottom:none}
+
+/* METRIC CARDS */
+.kpi-row{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:1px;background:var(--rule);
+  border:1px solid var(--rule);margin:16px 0;
+}
+.kpi{background:var(--bg);padding:14px 14px}
+.kpi-label{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi-val{font-family:'IBM Plex Sans',sans-serif;font-size:20px;font-weight:500;color:var(--ink);line-height:1}
+.kpi-val.pos{color:var(--green)}
+.kpi-val.neg{color:var(--red)}
+.kpi-sub{font-size:8px;color:var(--muted);margin-top:3px}
+
+/* DCF STEPS */
+.step-header{
+  background:var(--section);color:#fff;
+  padding:10px 14px;font-size:9px;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;
+  margin-top:20px;
+}
+.bridge-tbl{border:1px solid var(--rule);overflow:hidden}
+.bridge-tbl table th{background:#111;text-align:left}
+.bridge-tbl table td{text-align:left}
+.bridge-tbl table td:nth-child(2){text-align:right;font-weight:500}
+.bridge-tbl table td:nth-child(3){font-style:italic;color:var(--muted);font-size:9px}
+
+/* PRICE TARGET BOX */
+.pt-box{
+  display:grid;grid-template-columns:auto 1fr;
+  background:var(--yellow);border:2px solid #f9a825;
+  margin:16px 0;overflow:hidden;
+}
+.pt-label{padding:20px 24px;font-size:11px;font-weight:500;color:var(--ink);display:flex;align-items:center}
+.pt-value{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:48px;font-weight:300;color:var(--green);
+  display:flex;align-items:center;padding:12px 20px;
+  border-left:1px solid #f0c040;
+}
+.pt-note{padding:20px 24px;font-size:9px;color:var(--muted);font-style:italic;display:flex;align-items:center;border-left:1px solid #f0c040}
+
+/* SENSITIVITY */
+.sens-tbl table th{font-size:9px}
+.sens-tbl .base-cell{background:var(--header)!important;color:#fff!important;font-weight:600!important}
+.sens-green{background:#c8e6c9!important}
+.sens-lgreen{background:#dcedc8!important}
+.sens-yellow{background:#fff9c4!important}
+.sens-orange{background:#ffe0b2!important}
+.sens-red{background:#ffcdd2!important}
+
+/* SCENARIO TABLE */
+.scen-bull td{background:#d4edda}
+.scen-base td{background:#fff9c4}
+.scen-bear td{background:#fadbd8}
+
+/* NOTES */
+.note-box{
+  border:1px solid var(--rule);border-left:3px solid var(--section);
+  padding:12px 16px;margin:16px 0;
+  font-size:9px;color:var(--ink3);line-height:1.8;
+  background:var(--bg2);
+}
+.market-implied{
+  border:1px solid #f57f17;border-left:4px solid #f57f17;
+  background:#fff8e1;padding:14px 16px;margin:16px 0;
+  font-size:9px;color:var(--ink2);line-height:1.8;font-style:italic;
+}
+.market-implied strong{font-style:normal;color:var(--ink);font-size:10px}
+
+/* CONTEXT TABLE */
+.ctx-header td{background:#1565c0!important;color:#fff!important;font-weight:600!important;font-size:9px!important}
+
+/* FOOTER */
+footer{
+  background:var(--header);color:#555;
+  padding:18px 40px;display:flex;justify-content:space-between;
+  align-items:center;font-size:9px;letter-spacing:0.06em;
+  margin:0 -40px -64px;
+}
+footer a{color:#8fa8b8;text-decoration:none}
+
+/* SPACER */
+.sp{height:20px}
+.sp-sm{height:10px}
+
+@media(max-width:900px){
+  .page{padding:0 16px 48px}
+  .cover-hero{margin:0 -16px;padding:24px 16px}
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
+  footer{margin:0 -16px -48px;flex-direction:column;gap:8px;text-align:center}
+  nav{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">PLTR &nbsp;/&nbsp; DCF MODEL &nbsp;·&nbsp; MARCH 2026</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#cover">Cover</a>
+    <a class="nav-link" href="#assumptions">Assumptions</a>
+    <a class="nav-link" href="#income">Income Stmt</a>
+    <a class="nav-link" href="#fcf">FCF</a>
+    <a class="nav-link" href="#dcf">Valuation</a>
+    <a class="nav-link" href="#sensitivity">Sensitivity</a>
+  </div>
+  <div class="nav-right">Centurion Capital Research</div>
+</nav>
+
+<div class="page">
+
+<!-- ══ COVER ══════════════════════════════════════════════════════════════ -->
+<div id="cover">
+<div class="cover-hero">
+  <div class="cover-ticker">NASDAQ: PLTR &nbsp;·&nbsp; Software / AI / Defense &nbsp;·&nbsp; March 2026</div>
+  <div class="cover-title">Palantir Technologies Inc.</div>
+  <div class="cover-subtitle">Discounted Cash Flow Valuation Model &nbsp;·&nbsp; 5-Year Projection with Terminal Value</div>
+  <div class="cover-meta">
+    <div class="cm-label">Analyst</div><div class="cm-val">Kerellos Tadros</div>
+    <div class="cm-label">Firm</div><div class="cm-val">Centurion Capital</div>
+    <div class="cm-label">Date</div><div class="cm-val">March 2026</div>
+    <div class="cm-label">Model Type</div><div class="cm-val">5-Year DCF with Terminal Value</div>
+    <div class="cm-label">Projection Period</div><div class="cm-val">FY2025E – FY2029E</div>
+    <div class="cm-label">Price Target</div><div class="cm-val price">$13.65 (Base) &nbsp;|&nbsp; $22.46 (Bull) &nbsp;|&nbsp; $7.54 (Bear)</div>
+    <div class="cm-label">Source</div><div class="cm-val">Company 10-K / 8-K Filings, SEC EDGAR</div>
+  </div>
+</div>
+
+<div class="thesis-section">
+  <div class="thesis-header">▶ &nbsp;INVESTMENT THESIS SUMMARY</div>
+  <div class="thesis-row bull">ANALYST STANCE: BULLISH &nbsp;|&nbsp; Palantir is the operating system for AI-native government and enterprise. AIP bootcamp conversion rates of ~80%+ have no historical parallel in enterprise software — every customer that runs a bootcamp is a near-certain contract.</div>
+  <div class="thesis-row normal">Revenue grew 56% in FY2025, accelerating from 29% in FY2024. US Commercial grew 68%. The AIP flywheel is turning faster than consensus models assume — compounding revenue visibility 3 years out.</div>
+  <div class="thesis-row catalyst">Maven Smart System officially designated a Pentagon Program of Record on March 23, 2026 — securing long-term DOD revenue and validating PLTR as the AI backbone of US national defense. This is the bull case materializing.</div>
+  <div class="thesis-row numbers">Base case DCF: $13.65/share at 17.0% WACC. Current price: $154.78 — a 1,034% premium. Bull case (15.5% WACC, 38% CAGR): $22.46. Bear case (18.5% WACC, 18% CAGR): $7.54.</div>
+  <div class="thesis-row caution">The valuation is extreme by traditional metrics — but PLTR is not a traditional business. Position sizing and entry discipline matter more here than almost any other AI name in the market.</div>
+</div>
+</div>
+
+<!-- ══ ASSUMPTIONS ════════════════════════════════════════════════════════ -->
+<div class="sp" id="assumptions"></div>
+<div class="sec-title">KEY ASSUMPTIONS</div>
+<div class="tbl-source">Centurion Capital Research &nbsp;·&nbsp; March 2026 &nbsp;·&nbsp; All figures in $mm unless noted &nbsp;·&nbsp; Blue = analyst input</div>
+
+<div class="sec-sub">REVENUE GROWTH ASSUMPTIONS</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Assumption</th>
+    <th class="hist">FY2025A</th>
+    <th class="proj">FY2026E</th><th class="proj">FY2027E</th><th class="proj">FY2028E</th><th class="proj">FY2029E</th>
+    <th>Notes</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Total Revenue Growth Rate</td><td class="input">56.2%</td><td class="input">35.0%</td><td class="input">28.0%</td><td class="input">22.0%</td><td class="input">18.0%</td><td>Base: Deceleration as AI tailwinds mature</td></tr>
+    <tr><td>&nbsp;&nbsp;US Commercial Growth</td><td class="input">68.0%</td><td class="input">45.0%</td><td class="input">35.0%</td><td class="input">28.0%</td><td class="input">22.0%</td><td>AIP bootcamp driving hypergrowth</td></tr>
+    <tr><td>&nbsp;&nbsp;US Government Growth</td><td class="input">45.0%</td><td class="input">25.0%</td><td class="input">20.0%</td><td class="input">15.0%</td><td class="input">12.0%</td><td>DOGE cuts risk; defense AI offset</td></tr>
+    <tr><td>&nbsp;&nbsp;International Growth</td><td class="input">52.0%</td><td class="input">28.0%</td><td class="input">22.0%</td><td class="input">18.0%</td><td class="input">15.0%</td><td>Slower EU adoption, geopolitical risk</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="sp-sm"></div>
+<div class="sec-sub">MARGIN & PROFITABILITY ASSUMPTIONS</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Assumption</th>
+    <th class="hist">FY2025A</th>
+    <th class="proj">FY2026E</th><th class="proj">FY2027E</th><th class="proj">FY2028E</th><th class="proj">FY2029E</th>
+    <th>Notes</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Adjusted Operating Margin</td><td class="input">37.0%</td><td class="input">38.0%</td><td class="input">40.0%</td><td class="input">42.0%</td><td class="input">44.0%</td><td>Operating leverage on SBC-heavy model</td></tr>
+    <tr><td>GAAP Operating Margin</td><td class="input">17.0%</td><td class="input">20.0%</td><td class="input">23.0%</td><td class="input">26.0%</td><td class="input">29.0%</td><td>SBC declining as % of revenue</td></tr>
+    <tr><td>FCF Margin</td><td class="input">32.0%</td><td class="input">33.0%</td><td class="input">35.0%</td><td class="input">37.0%</td><td class="input">38.0%</td><td>Strong WC dynamics, low capex model</td></tr>
+    <tr><td>D&amp;A as % of Revenue</td><td class="input">3.5%</td><td class="input">3.2%</td><td class="input">3.0%</td><td class="input">2.8%</td><td class="input">2.5%</td><td>Asset-light software model</td></tr>
+    <tr><td>Capex as % of Revenue</td><td class="input">1.5%</td><td class="input">1.4%</td><td class="input">1.3%</td><td class="input">1.2%</td><td class="input">1.1%</td><td>Minimal physical infrastructure</td></tr>
+    <tr><td>Tax Rate</td><td class="input">20.0%</td><td class="input">21.0%</td><td class="input">21.0%</td><td class="input">22.0%</td><td class="input">22.0%</td><td>Post-NOL utilization normalization</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="sp-sm"></div>
+<div class="sec-sub">DCF VALUATION ASSUMPTIONS</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Assumption</th><th>Value</th><th style="text-align:left">Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Risk-Free Rate</td><td class="input">4.25%</td><td style="text-align:left;font-style:italic;color:var(--muted)">US 10-Year Treasury yield — March 2026</td></tr>
+    <tr><td>Equity Risk Premium (ERP)</td><td class="input">5.50%</td><td style="text-align:left;font-style:italic;color:var(--muted)">Damodaran US ERP estimate — used for CAPM</td></tr>
+    <tr><td>Beta (5-Year Monthly vs SPX)</td><td class="input">2.35</td><td style="text-align:left;font-style:italic;color:var(--muted)">PLTR high-beta tech — sourced from Bloomberg</td></tr>
+    <tr><td>Cost of Equity (CAPM)</td><td class="input">17.2%</td><td style="text-align:left;font-style:italic;color:var(--muted)">4.25% + (2.35 × 5.50%) = 17.2%</td></tr>
+    <tr><td>Pre-Tax Cost of Debt</td><td class="input">5.50%</td><td style="text-align:left;font-style:italic;color:var(--muted)">Investment grade equivalent</td></tr>
+    <tr><td>Effective Tax Rate</td><td class="input">21.0%</td><td style="text-align:left;font-style:italic;color:var(--muted)">Blended forward rate post-NOL utilization</td></tr>
+    <tr><td>After-Tax Cost of Debt</td><td class="input">4.35%</td><td style="text-align:left;font-style:italic;color:var(--muted)">5.50% × (1 − 21.0%) = 4.35%</td></tr>
+    <tr><td>Weight of Equity</td><td class="input">98.0%</td><td style="text-align:left;font-style:italic;color:var(--muted)">Near debt-free balance sheet</td></tr>
+    <tr><td>Weight of Debt</td><td class="input">2.0%</td><td style="text-align:left;font-style:italic;color:var(--muted)">Minimal debt outstanding</td></tr>
+    <tr><td>WACC</td><td class="input" style="font-weight:700;font-size:12px">17.0%</td><td style="text-align:left;font-style:italic;color:var(--muted)">(98% × 17.2%) + (2% × 4.35%) ≈ 17.0%</td></tr>
+    <tr><td>Terminal Growth Rate</td><td class="input">4.0%</td><td style="text-align:left;font-style:italic;color:var(--muted)">Long-run nominal GDP growth + AI platform premium</td></tr>
+    <tr><td>Terminal Value Method</td><td class="bold" style="text-align:right;font-weight:600">Gordon Growth</td><td style="text-align:left;font-style:italic;color:var(--muted)">TV = FCF(n+1) ÷ (WACC − g) &nbsp;|&nbsp; Gordon Growth Model</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══ INCOME STATEMENT ════════════════════════════════════════════════════ -->
+<div class="sp" id="income"></div>
+<div class="sec-title">INCOME STATEMENT</div>
+<div class="tbl-source">Source: Company 10-K/8-K Filings, SEC EDGAR &nbsp;|&nbsp; Projections: Centurion Capital Research &nbsp;|&nbsp; March 2026</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Income Statement ($mm)</th>
+    <th class="hist">FY2021A</th><th class="hist">FY2022A</th><th class="hist">FY2023A</th><th class="hist">FY2024A</th><th class="hist">FY2025A</th>
+    <th class="proj">FY2026E</th><th class="proj">FY2027E</th><th class="proj">FY2028E</th><th class="proj">FY2029E</th>
+  </tr></thead>
+  <tbody>
+    <tr class="section-row"><td colspan="10">REVENUE</td></tr>
+    <tr><td>US Commercial Revenue</td><td class="input">$189.0</td><td class="input">$335.0</td><td class="input">$485.0</td><td class="input">$702.0</td><td class="input">$1,178.0</td><td>$1,708.0</td><td>$2,308.0</td><td>$2,954.0</td><td>$3,604.0</td></tr>
+    <tr><td>US Government Revenue</td><td class="input">$690.0</td><td class="input">$826.0</td><td class="input">$905.0</td><td class="input">$1,114.0</td><td class="input">$1,618.0</td><td>$2,023.0</td><td>$2,427.0</td><td>$2,792.0</td><td>$3,127.0</td></tr>
+    <tr><td>International Revenue</td><td class="input">$663.0</td><td class="input">$745.0</td><td class="input">$838.0</td><td class="input">$1,049.0</td><td class="input">$1,679.0</td><td>$2,149.0</td><td>$2,621.0</td><td>$3,093.0</td><td>$3,557.0</td></tr>
+    <tr class="total"><td>Total Revenue</td><td>$1,542.0</td><td>$1,906.0</td><td>$2,228.0</td><td>$2,865.0</td><td>$4,475.0</td><td>$5,880.0</td><td>$7,356.0</td><td>$8,839.0</td><td>$10,288.0</td></tr>
+    <tr><td>&nbsp;&nbsp;YoY Revenue Growth %</td><td class="pct">—</td><td class="pct">23.6%</td><td class="pct">16.9%</td><td class="pct">28.6%</td><td class="pct">56.2%</td><td class="pct pos">35.0%</td><td class="pct pos">28.0%</td><td class="pct pos">22.0%</td><td class="pct pos">18.0%</td></tr>
+
+    <tr class="section-row"><td colspan="10">GROSS PROFIT</td></tr>
+    <tr><td>Cost of Revenue</td><td>$342.3</td><td>$407.9</td><td>$432.2</td><td>$532.9</td><td>$805.5</td><td>$1,029.0</td><td>$1,250.5</td><td>$1,458.4</td><td>$1,646.1</td></tr>
+    <tr class="total"><td>Gross Profit</td><td>$1,199.7</td><td>$1,498.1</td><td>$1,795.8</td><td>$2,332.1</td><td>$3,669.5</td><td>$4,851.0</td><td>$6,105.5</td><td>$7,380.6</td><td>$8,641.9</td></tr>
+    <tr><td>&nbsp;&nbsp;Gross Margin %</td><td class="pct">77.8%</td><td class="pct">78.6%</td><td class="pct">80.6%</td><td class="pct">81.4%</td><td class="pct">82.0%</td><td class="pct pos">82.5%</td><td class="pct pos">83.0%</td><td class="pct pos">83.5%</td><td class="pct pos">84.0%</td></tr>
+
+    <tr class="section-row"><td colspan="10">OPERATING EXPENSES</td></tr>
+    <tr><td>Research &amp; Development</td><td>$431.8</td><td>$495.6</td><td>$534.7</td><td>$630.3</td><td>$895.0</td><td>$1,058.4</td><td>$1,250.5</td><td>$1,414.2</td><td>$1,543.2</td></tr>
+    <tr><td>Sales &amp; Marketing</td><td>$493.4</td><td>$552.7</td><td>$601.6</td><td>$716.3</td><td>$1,029.3</td><td>$1,293.6</td><td>$1,544.8</td><td>$1,767.8</td><td>$1,954.7</td></tr>
+    <tr><td>General &amp; Administrative</td><td>$215.9</td><td>$247.8</td><td>$267.4</td><td>$315.2</td><td>$447.5</td><td>$529.2</td><td>$662.0</td><td>$707.1</td><td>$823.0</td></tr>
+    <tr class="total"><td>Total Operating Expenses</td><td>$1,141.1</td><td>$1,296.1</td><td>$1,403.6</td><td>$1,661.7</td><td>$2,371.8</td><td>$2,881.2</td><td>$3,457.3</td><td>$3,889.2</td><td>$4,321.0</td></tr>
+    <tr><td colspan="10" style="font-style:italic;font-size:9px;color:var(--muted);text-align:left;background:var(--bg2)">&nbsp;&nbsp;(incl. SBC allocated to R&amp;D, S&amp;M &amp; G&amp;A per GAAP)</td></tr>
+
+    <tr class="section-row"><td colspan="10">OPERATING INCOME</td></tr>
+    <tr class="total"><td>GAAP Operating Income (Loss)</td><td class="neg">($308.4)</td><td class="neg">($76.2)</td><td class="pos">$133.7</td><td class="pos">$315.2</td><td class="pos">$760.8</td><td class="pos">$1,176.0</td><td class="pos">$1,691.9</td><td class="pos">$2,298.1</td><td class="pos">$2,983.5</td></tr>
+    <tr><td>&nbsp;&nbsp;GAAP Operating Margin %</td><td class="pct neg">(20.0%)</td><td class="pct neg">(4.0%)</td><td class="pct pos">6.0%</td><td class="pct pos">11.0%</td><td class="pct pos">17.0%</td><td class="pct pos">20.0%</td><td class="pct pos">23.0%</td><td class="pct pos">26.0%</td><td class="pct pos">29.0%</td></tr>
+    <tr><td>Adjusted Operating Income</td><td>$339.2</td><td>$343.1</td><td>$623.8</td><td>$974.1</td><td>$1,655.8</td><td>$2,234.4</td><td>$2,942.4</td><td>$3,712.4</td><td>$4,526.7</td></tr>
+    <tr><td>&nbsp;&nbsp;Adjusted Operating Margin %</td><td class="pct">22.0%</td><td class="pct">18.0%</td><td class="pct">28.0%</td><td class="pct">34.0%</td><td class="pct pos">37.0%</td><td class="pct pos">38.0%</td><td class="pct pos">40.0%</td><td class="pct pos">42.0%</td><td class="pct pos">44.0%</td></tr>
+
+    <tr class="section-row"><td colspan="10">NET INCOME</td></tr>
+    <tr class="total"><td>GAAP Net Income (Loss)</td><td class="neg">($520.4)</td><td class="neg">($373.7)</td><td class="pos">$209.8</td><td class="pos">$461.8</td><td class="pos">$1,099.0</td><td class="pos">$1,528.8</td><td class="pos">$2,059.7</td><td class="pos">$2,651.7</td><td class="pos">$3,292.2</td></tr>
+    <tr><td>&nbsp;&nbsp;Net Margin %</td><td class="pct neg">(33.8%)</td><td class="pct neg">(19.6%)</td><td class="pct pos">9.4%</td><td class="pct pos">16.1%</td><td class="pct pos">24.6%</td><td class="pct pos">26.0%</td><td class="pct pos">28.0%</td><td class="pct pos">30.0%</td><td class="pct pos">32.0%</td></tr>
+
+    <tr class="section-row"><td colspan="10">PER SHARE DATA</td></tr>
+    <tr><td>Diluted Shares Outstanding (mm)</td><td>1,980.0</td><td>2,020.0</td><td>2,060.0</td><td>2,100.0</td><td>2,150.0</td><td>2,180.0</td><td>2,200.0</td><td>2,220.0</td><td>2,240.0</td></tr>
+    <tr class="total"><td>EPS (Diluted)</td><td class="neg">($0.26)</td><td class="neg">($0.19)</td><td class="pos">$0.10</td><td class="pos">$0.22</td><td class="pos">$0.51</td><td class="pos">$0.70</td><td class="pos">$0.94</td><td class="pos">$1.19</td><td class="pos">$1.47</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══ FREE CASH FLOW ══════════════════════════════════════════════════════ -->
+<div class="sp" id="fcf"></div>
+<div class="sec-title">FREE CASH FLOW BRIDGE</div>
+<div class="tbl-source">Source: Company 10-K/8-K Filings &nbsp;|&nbsp; Projections: Centurion Capital Research &nbsp;|&nbsp; March 2026</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Free Cash Flow Bridge ($mm)</th>
+    <th class="hist">FY2021A</th><th class="hist">FY2022A</th><th class="hist">FY2023A</th><th class="hist">FY2024A</th><th class="hist">FY2025A</th>
+    <th class="proj">FY2026E</th><th class="proj">FY2027E</th><th class="proj">FY2028E</th><th class="proj">FY2029E</th>
+  </tr></thead>
+  <tbody>
+    <tr class="section-row"><td colspan="10">CASH FLOW FROM OPERATIONS</td></tr>
+    <tr class="total"><td>GAAP Net Income (Loss)</td><td class="neg">($520.4)</td><td class="neg">($373.7)</td><td class="pos">$209.8</td><td class="pos">$461.8</td><td class="pos">$1,099.0</td><td class="pos">$1,528.8</td><td class="pos">$2,059.7</td><td class="pos">$2,651.7</td><td class="pos">$3,292.2</td></tr>
+    <tr><td>(+) Depreciation &amp; Amortization</td><td>$92.5</td><td>$95.3</td><td>$89.1</td><td>$108.9</td><td>$156.6</td><td>$188.2</td><td>$220.7</td><td>$247.5</td><td>$257.2</td></tr>
+    <tr><td>(+) Stock-Based Compensation</td><td>$586.0</td><td>$648.0</td><td>$623.8</td><td>$630.3</td><td>$805.5</td><td>$882.0</td><td>$956.3</td><td>$972.3</td><td>$977.4</td></tr>
+    <tr><td>(+/-) Working Capital Changes</td><td class="neg">($30.8)</td><td class="neg">($28.6)</td><td>$22.3</td><td>$57.3</td><td>$111.9</td><td>$117.6</td><td>$132.4</td><td>$141.4</td><td>$144.0</td></tr>
+    <tr class="total"><td>Cash Flow from Operations</td><td>$127.2</td><td>$341.1</td><td>$945.0</td><td>$1,258.3</td><td class="pos">$2,173.0</td><td class="pos">$2,716.6</td><td class="pos">$3,369.0</td><td class="pos">$4,012.9</td><td class="pos">$4,670.8</td></tr>
+
+    <tr class="section-row"><td colspan="10">FREE CASH FLOW</td></tr>
+    <tr><td>(-) Capital Expenditures</td><td class="neg">($30.8)</td><td class="neg">($34.3)</td><td class="neg">($35.6)</td><td class="neg">($43.0)</td><td class="neg">($67.1)</td><td class="neg">($82.3)</td><td class="neg">($95.6)</td><td class="neg">($106.1)</td><td class="neg">($113.2)</td></tr>
+    <tr class="total"><td>GAAP Free Cash Flow</td><td>$138.8</td><td>$190.6</td><td>$690.7</td><td>$1,146.0</td><td class="pos">$1,432.0</td><td class="pos">$1,940.4</td><td class="pos">$2,574.6</td><td class="pos">$3,270.4</td><td class="pos">$3,909.4</td></tr>
+    <tr><td>&nbsp;&nbsp;FCF Margin %</td><td class="pct">9.0%</td><td class="pct">10.0%</td><td class="pct pos">31.0%</td><td class="pct pos">40.0%</td><td class="pct pos">32.0%</td><td class="pct pos">33.0%</td><td class="pct pos">35.0%</td><td class="pct pos">37.0%</td><td class="pct pos">38.0%</td></tr>
+    <tr><td>&nbsp;&nbsp;YoY FCF Growth %</td><td class="pct">—</td><td class="pct pos">37.3%</td><td class="pct pos">262.4%</td><td class="pct pos">65.9%</td><td class="pct neg">25.0%</td><td class="pct pos">35.5%</td><td class="pct pos">32.7%</td><td class="pct pos">27.0%</td><td class="pct pos">19.5%</td></tr>
+    <tr><td colspan="10" style="font-style:italic;font-size:9px;color:var(--muted);text-align:left;background:var(--bg2)">&nbsp;&nbsp;Note: GAAP FCF = Revenue × FCF Margin % (per Assumptions). CFO–CapEx bridge shown above is illustrative; gap to CFO–CapEx reflects SBC treatment.</td></tr>
+
+    <tr class="section-row"><td colspan="10">ADJUSTED FREE CASH FLOW (excl. SBC)</td></tr>
+    <tr class="total"><td>Adjusted FCF (excl. SBC)</td><td class="neg">($447.2)</td><td class="neg">($457.4)</td><td>$66.8</td><td>$515.7</td><td>$626.5</td><td>$1,058.4</td><td>$1,618.3</td><td>$2,298.1</td><td>$2,932.1</td></tr>
+    <tr><td>&nbsp;&nbsp;Adjusted FCF Margin %</td><td class="pct neg">(29.0%)</td><td class="pct neg">(24.0%)</td><td class="pct">3.0%</td><td class="pct">18.0%</td><td class="pct">14.0%</td><td class="pct pos">18.0%</td><td class="pct pos">22.0%</td><td class="pct pos">26.0%</td><td class="pct pos">28.5%</td></tr>
+    <tr><td colspan="10" style="font-style:italic;font-size:9px;color:var(--muted);text-align:left;background:var(--bg2)">&nbsp;&nbsp;Note: SBC declined from ~38% of revenue in FY2021 to ~18% in FY2025E. Adjusted FCF removes SBC to reflect pure cash generation. GAAP FCF used in DCF valuation.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══ DCF VALUATION ═══════════════════════════════════════════════════════ -->
+<div class="sp" id="dcf"></div>
+<div class="sec-title">DCF VALUATION OUTPUT</div>
+<div class="tbl-source">WACC: 17.0% &nbsp;|&nbsp; Terminal Growth Rate: 4.0% &nbsp;|&nbsp; Base Case &nbsp;|&nbsp; Projection Period: FY2026E – FY2029E</div>
+
+<div class="step-header">STEP 1 — PROJECTED FREE CASH FLOWS &amp; PRESENT VALUE</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>Metric</th>
+    <th class="proj">FY2026E</th><th class="proj">FY2027E</th><th class="proj">FY2028E</th><th class="proj">FY2029E</th>
+    <th style="background:#2d4a3e;color:#4caf50">Sum / TV</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Total Revenue ($mm)</td><td>$5,880.0</td><td>$7,356.0</td><td>$8,839.0</td><td>$10,288.0</td><td>—</td></tr>
+    <tr><td>FCF Margin %</td><td class="pct">33.0%</td><td class="pct">35.0%</td><td class="pct">37.0%</td><td class="pct">38.0%</td><td>—</td></tr>
+    <tr class="total"><td>Unlevered FCF ($mm)</td><td class="pos">$1,940.4</td><td class="pos">$2,574.6</td><td class="pos">$3,270.4</td><td class="pos">$3,909.4</td><td>—</td></tr>
+    <tr><td>Discount Period (Year t)</td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td></tr>
+    <tr><td>Discount Factor @ WACC 17%</td><td>0.8547</td><td>0.7305</td><td>0.6244</td><td>0.5337</td><td>—</td></tr>
+    <tr class="total"><td>PV of FCF ($mm)</td><td class="pos">$1,658.5</td><td class="pos">$1,880.8</td><td class="pos">$2,042.0</td><td class="pos">$2,086.3</td><td style="background:var(--yellow);color:var(--green);font-weight:700;font-size:12px">$7,667.5</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="step-header">STEP 2 — TERMINAL VALUE CALCULATION (GORDON GROWTH MODEL)</div>
+<div class="bridge-tbl">
+<table>
+  <thead><tr><th style="text-align:left">Assumption</th><th style="text-align:right">Value</th><th style="text-align:left">Formula / Note</th></tr></thead>
+  <tbody>
+    <tr><td>Terminal Year FCF ($mm)</td><td style="text-align:right">$3,909.4</td><td style="font-style:italic;color:var(--muted)">FY2029E Unlevered FCF</td></tr>
+    <tr class="total"><td>Terminal Growth Rate (g)</td><td style="text-align:right;color:var(--input);font-weight:600">4.0%</td><td style="font-style:italic;color:var(--muted)">Long-run nominal GDP + AI platform premium</td></tr>
+    <tr><td>FCF × (1 + g) [$mm]</td><td style="text-align:right">$4,065.8</td><td style="font-style:italic;color:var(--muted)">$3,909.4mm × (1 + 4.0%)</td></tr>
+    <tr><td>WACC</td><td style="text-align:right">17.0%</td><td style="font-style:italic;color:var(--muted)">17.0% — see Assumptions tab</td></tr>
+    <tr><td>WACC minus g</td><td style="text-align:right">13.0%</td><td style="font-style:italic;color:var(--muted)">17.0% − 4.0% = 13.0%</td></tr>
+    <tr class="total"><td>Terminal Value ($mm)</td><td style="text-align:right;color:var(--green);font-weight:700">$31,275.5</td><td style="font-style:italic;color:var(--muted)">FCF(n+1) ÷ (WACC − g)</td></tr>
+    <tr><td>PV Discount Factor (Year 4)</td><td style="text-align:right">0.5337</td><td style="font-style:italic;color:var(--muted)">1 ÷ (1 + WACC)⁴</td></tr>
+    <tr class="total"><td>PV of Terminal Value ($mm)</td><td style="text-align:right;color:var(--green);font-weight:700">$16,690.2</td><td style="font-style:italic;color:var(--muted)">Terminal Value × Discount Factor</td></tr>
+    <tr><td>TV as % of Enterprise Value</td><td style="text-align:right">68.5%</td><td style="font-style:italic;color:var(--muted)">Typical range: 60–80%</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="step-header">STEP 3 — ENTERPRISE VALUE → EQUITY VALUE → PRICE TARGET</div>
+<div class="bridge-tbl">
+<table>
+  <thead><tr><th style="text-align:left">Bridge Component</th><th style="text-align:right">Value ($mm)</th><th style="text-align:left">Notes</th></tr></thead>
+  <tbody>
+    <tr><td>PV of Projected FCFs (FY26-29E)</td><td style="text-align:right">$7,667.5</td><td style="font-style:italic;color:var(--muted)">Sum of 4 years discounted at 17%</td></tr>
+    <tr><td>PV of Terminal Value</td><td style="text-align:right">$16,690.2</td><td style="font-style:italic;color:var(--muted)">TV of $31,276mm discounted at 17%</td></tr>
+    <tr class="total"><td>Enterprise Value</td><td style="text-align:right;color:var(--green);font-weight:700">$24,357.7</td><td style="font-style:italic;color:var(--muted)">Sum of PV FCFs + PV Terminal Value</td></tr>
+    <tr><td>(+) Cash &amp; Equivalents</td><td style="text-align:right">$5,228.0</td><td style="font-style:italic;color:var(--muted)">FY2025A Balance Sheet — Company 10-K</td></tr>
+    <tr><td>(-) Total Debt</td><td style="text-align:right;color:var(--red)">($245.0)</td><td style="font-style:italic;color:var(--muted)">FY2025A Balance Sheet — near debt-free</td></tr>
+    <tr class="total"><td>Equity Value</td><td style="text-align:right;color:var(--green);font-weight:700">$29,340.7</td><td style="font-style:italic;color:var(--muted)">Enterprise Value + Cash − Debt</td></tr>
+    <tr><td>Diluted Shares Outstanding (mm)</td><td style="text-align:right">2,150.0</td><td style="font-style:italic;color:var(--muted)">FY2025A — mm shares incl. dilution</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="pt-box">
+  <div class="pt-label">Implied Price Per Share<br><span style="font-size:9px;color:var(--muted);font-weight:400">Base Case &nbsp;|&nbsp; WACC 17% &nbsp;|&nbsp; TGR 4%</span></div>
+  <div class="pt-value">$13.65</div>
+  <div class="pt-note">Current price: $154.78 &nbsp;|&nbsp; 1,034% premium to base case<br>Bull case: $22.46 &nbsp;|&nbsp; Bear case: $7.54<br>See Sensitivity tab for full scenario matrix</div>
+</div>
+
+<!-- ══ SENSITIVITY ═════════════════════════════════════════════════════════ -->
+<div class="sp" id="sensitivity"></div>
+<div class="sec-title">SENSITIVITY ANALYSIS</div>
+<div class="tbl-source">Implied Price Target ($) across assumption scenarios &nbsp;|&nbsp; Base case highlighted &nbsp;·&nbsp; March 2026</div>
+
+<div class="sec-sub">TABLE 1: WACC vs Terminal Growth Rate (Base Case FCF Assumptions)</div>
+<div class="tbl-wrap sens-tbl">
+<table>
+  <thead><tr>
+    <th>WACC ↓ &nbsp;/&nbsp; TGR →</th>
+    <th>2.5%</th><th>3.0%</th><th>4.0%</th><th>5.0%</th><th>5.5%</th>
+  </tr></thead>
+  <tbody>
+    <tr><td class="bold">14.0%</td><td class="sens-green">$16.74</td><td class="sens-green">$17.27</td><td class="sens-green">$18.48</td><td class="sens-green">$19.95</td><td class="sens-green">$20.82</td></tr>
+    <tr><td class="bold">15.5%</td><td class="sens-lgreen">$14.94</td><td class="sens-lgreen">$15.33</td><td class="sens-lgreen">$16.22</td><td class="sens-lgreen">$17.28</td><td class="sens-lgreen">$17.89</td></tr>
+    <tr><td class="bold">17.0%</td><td class="sens-yellow">$13.52</td><td class="sens-yellow">$13.82</td><td class="base-cell">$13.65</td><td class="sens-yellow">$15.28</td><td class="sens-yellow">$15.73</td></tr>
+    <tr><td class="bold">18.5%</td><td class="sens-orange">$12.36</td><td class="sens-orange">$12.60</td><td class="sens-orange">$13.13</td><td class="sens-orange">$13.73</td><td class="sens-orange">$14.07</td></tr>
+    <tr><td class="bold">20.0%</td><td class="sens-red">$11.41</td><td class="sens-red">$11.60</td><td class="sens-red">$12.02</td><td class="sens-red">$12.49</td><td class="sens-red">$12.76</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="sp-sm"></div>
+<div class="sec-sub">TABLE 2: Revenue CAGR (FY26-29E) vs FCF Margin (Year 5)</div>
+<div class="tbl-wrap sens-tbl">
+<table>
+  <thead><tr>
+    <th>CAGR ↓ &nbsp;/&nbsp; FCF Mgn →</th>
+    <th>28%</th><th>32%</th><th>35%</th><th>38%</th><th>42%</th>
+  </tr></thead>
+  <tbody>
+    <tr><td class="bold">18%</td><td class="sens-red">$10.28</td><td class="sens-red">$11.07</td><td class="sens-orange">$11.66</td><td class="sens-orange">$12.25</td><td class="sens-orange">$13.04</td></tr>
+    <tr><td class="bold">22%</td><td class="sens-red">$11.61</td><td class="sens-orange">$12.51</td><td class="sens-orange">$13.19</td><td class="sens-orange">$13.86</td><td class="sens-yellow">$14.77</td></tr>
+    <tr><td class="bold">28%</td><td class="sens-orange">$13.75</td><td class="sens-yellow">$14.85</td><td class="sens-lgreen">$15.67</td><td class="sens-lgreen">$16.49</td><td class="sens-lgreen">$17.58</td></tr>
+    <tr><td class="bold">35%</td><td class="sens-yellow">$16.51</td><td class="sens-lgreen">$17.87</td><td class="sens-green">$18.88</td><td class="sens-green">$19.90</td><td class="sens-green">$21.25</td></tr>
+    <tr><td class="bold">40%</td><td class="sens-lgreen">$18.67</td><td class="sens-green">$20.24</td><td class="sens-green">$21.41</td><td class="sens-green">$22.59</td><td class="sens-green">$24.15</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="sp-sm"></div>
+<div class="sec-sub">SCENARIO SUMMARY: BULL / BASE / BEAR</div>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Scenario</th><th>Rev CAGR</th><th>FCF Margin Y5</th><th>WACC</th><th>TGR</th><th>Price Target</th><th>Upside/Downside</th></tr></thead>
+  <tbody>
+    <tr class="scen-bull"><td style="font-weight:600">Bull Case</td><td class="input">38%</td><td class="input">40%</td><td class="input">15.5%</td><td class="input">5.0%</td><td class="pos bold">$22.46</td><td class="pos bold">+65%</td></tr>
+    <tr class="scen-base"><td style="font-weight:600">Base Case</td><td class="input">28%</td><td class="input">35%</td><td class="input">17.0%</td><td class="input">4.0%</td><td class="bold">$13.65</td><td>—</td></tr>
+    <tr class="scen-bear"><td style="font-weight:600">Bear Case</td><td class="input">18%</td><td class="input">28%</td><td class="input">18.5%</td><td class="input">2.5%</td><td class="neg bold">$7.54</td><td class="neg bold">-45%</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note-box">
+  <strong>KEY MODEL ASSUMPTIONS &amp; RISKS</strong><br><br>
+  1. WACC reflects high beta (2.35x) consistent with high-growth, SBC-heavy tech. Lower beta assumption materially increases target.<br>
+  2. Terminal growth rate of 4.0% assumes PLTR maintains AI platform leadership and government contract base beyond projection period.<br>
+  3. SBC headwinds: Adjusted FCF significantly exceeds GAAP FCF due to ~18% SBC/revenue. Model uses GAAP-adjusted FCF.<br>
+  4. Government concentration risk: ~40% of revenue from US/Int'l government. DOGE-related cuts represent key downside risk.<br>
+  5. Bull case requires sustained 38%+ CAGR through 2029, implying ~$14B revenue — aggressive but defensible given AI tailwinds.
+</div>
+
+<div class="market-implied">
+  <strong>MARKET IMPLIED ASSUMPTIONS &nbsp;|&nbsp;</strong> At PLTR's current price of $154.78 (March 2026), the market is implying a WACC of ~8-9% and terminal growth of ~5.5%+ — requiring sustained 38-40% revenue CAGR through 2029 with FCF margins expanding to 42%+. This is achievable if AIP bootcamp adoption continues at current velocity and government AI spending accelerates beyond guidance. My base case assumes deceleration (28% CAGR) — hence the 1,034% gap to current price. The bull case closes this gap. Maven Program of Record designation (3/23/26) is the first major catalyst validating the bull scenario.
+</div>
+
+</div><!-- end .page -->
+
+<footer>
+  <div>Centurion Capital Research &nbsp;·&nbsp; Kerellos Tadros &nbsp;·&nbsp; March 2026</div>
+  <div>For informational purposes only. Not investment advice. &nbsp;·&nbsp; Sources: SEC EDGAR, Bloomberg, Company 10-K/8-K Filings</div>
+  <div><a href="https://prometheust.github.io">prometheust.github.io</a> &nbsp;·&nbsp; <a href="https://centurioncapitalgroup.info">centurioncapitalgroup.info</a></div>
+</footer>
+
+</body>
+</html>
