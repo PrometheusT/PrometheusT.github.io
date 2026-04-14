@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Construction Model — Kerellos Tadros</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#050505;
+  --surface:#0c0c0c;
+  --surface2:#141414;
+  --surface3:#1c1c1c;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --gold:#c8a96e;
+  --gold2:rgba(200,169,110,0.15);
+  --gold3:rgba(200,169,110,0.06);
+  --text:#f0ece4;
+  --text2:#9e9990;
+  --text3:#5a5752;
+  --green:#4a7c59;
+  --green2:rgba(74,124,89,0.18);
+  --red:#7c4a4a;
+  --red2:rgba(124,74,74,0.18);
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+  --display:'Playfair Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+
+/* PRINT MARKS */
+.corner{position:fixed;width:16px;height:16px;z-index:100;opacity:0.2}
+.corner.tl{top:20px;left:20px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
+.corner.tr{top:20px;right:20px;border-top:1px solid var(--gold);border-right:1px solid var(--gold)}
+.corner.bl{bottom:20px;left:20px;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold)}
+.corner.br{bottom:20px;right:20px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold)}
+
+/* HEADER */
+.doc-header{
+  border-bottom:1px solid var(--border2);
+  padding:0;
+  position:relative;
+}
+.header-top{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  padding:28px 48px 20px;
+  gap:20px;
+}
+.header-left{display:flex;flex-direction:column;gap:4px}
+.firm-name{font-family:var(--mono);font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);opacity:0.7}
+.doc-type{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3)}
+.header-center{text-align:center}
+.doc-title{font-family:var(--display);font-size:32px;font-weight:900;letter-spacing:1px;color:var(--text);line-height:1}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.meta-item{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.meta-item span{color:var(--text2)}
+
+.header-rule{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.25;margin:0 48px}
+
+.header-stats{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border-top:1px solid var(--border);
+}
+.hstat{
+  padding:14px 20px;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:3px;
+}
+.hstat:last-child{border-right:none}
+.hstat-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.hstat-value{font-family:var(--mono);font-size:14px;color:var(--gold);letter-spacing:0.5px}
+
+/* LAYOUT */
+.page{max-width:1280px;margin:0 auto;padding:48px}
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1px}
+
+/* SECTION LABELS */
+.section-label{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:12px 24px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.section-label::before{content:'';width:20px;height:1px;background:var(--gold);opacity:0.4}
+
+/* HOLDINGS TABLE */
+.holdings-panel{background:var(--surface)}
+.holdings-table{width:100%;border-collapse:collapse}
+.holdings-table thead tr{border-bottom:1px solid var(--border2)}
+.holdings-table th{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:10px 24px;
+  text-align:left;
+  font-weight:400;
+}
+.holdings-table th.right{text-align:right}
+.holdings-table tbody tr{
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+  cursor:default;
+}
+.holdings-table tbody tr:hover{background:var(--surface2)}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table td{padding:14px 24px;vertical-align:middle}
+
+.td-ticker{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--gold);letter-spacing:1px}
+.td-name{font-family:var(--sans);font-size:12px;color:var(--text);font-weight:300}
+.td-sector{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;margin-top:3px}
+.td-weight{font-family:var(--mono);font-size:12px;color:var(--text2);text-align:right}
+.td-type{font-family:var(--mono);font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border:1px solid;display:inline-block;text-align:center}
+.type-growth{border-color:rgba(74,124,89,0.4);color:var(--green)}
+.type-value{border-color:rgba(200,169,110,0.3);color:var(--gold)}
+.type-income{border-color:rgba(74,89,124,0.4);color:#6e8ac8}
+.type-defense{border-color:rgba(124,74,74,0.4);color:#c86e6e}
+
+.bar-cell{padding:14px 24px;vertical-align:middle;width:120px}
+.bar-track{height:2px;background:var(--surface3);position:relative;border-radius:1px}
+.bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--gold);border-radius:1px;opacity:0.6}
+
+/* ALLOCATION VISUAL */
+.alloc-panel{background:var(--surface);padding:0}
+.alloc-inner{padding:24px}
+.donut-wrap{display:flex;justify-content:center;padding:24px 0 16px}
+.legend-list{display:flex;flex-direction:column;gap:0}
+.legend-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid var(--border);
+  gap:12px;
+}
+.legend-row:last-child{border-bottom:none}
+.legend-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.legend-ticker{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:1px;flex:1}
+.legend-pct{font-family:var(--mono);font-size:10px;color:var(--gold)}
+
+/* METRICS */
+.metrics-panel{background:var(--surface);padding:24px}
+.metric-block{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.metric-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.metric-title{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.metric-value{font-family:var(--display);font-size:28px;color:var(--text);margin-bottom:4px}
+.metric-sub{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.metric-bar{height:1px;background:var(--surface3);margin-top:12px;position:relative}
+.metric-bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--gold);opacity:0.5}
+
+/* THESIS PANEL */
+.thesis-panel{background:var(--surface);padding:28px}
+.thesis-title{font-family:var(--display);font-size:18px;color:var(--text);margin-bottom:16px;font-weight:700}
+.thesis-body{font-family:var(--sans);font-size:13px;color:var(--text2);line-height:1.85;font-weight:300}
+.thesis-body strong{color:var(--text);font-weight:400}
+
+/* SECTOR BREAKDOWN */
+.sector-panel{background:var(--surface);padding:24px}
+.sector-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.sector-row:last-child{margin-bottom:0}
+.sector-name{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--text2);width:130px;flex-shrink:0}
+.sector-bar{flex:1;height:2px;background:var(--surface3);position:relative;border-radius:1px}
+.sector-bar-fill{position:absolute;left:0;top:0;height:100%;border-radius:1px;opacity:0.7}
+.sector-pct{font-family:var(--mono);font-size:9px;color:var(--text3);width:30px;text-align:right}
+
+/* CONVICTION TABLE */
+.conviction-panel{background:var(--surface)}
+.conviction-table{width:100%;border-collapse:collapse}
+.conviction-table th{
+  font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);padding:10px 20px;text-align:left;font-weight:400;
+  border-bottom:1px solid var(--border2)
+}
+.conviction-table td{padding:12px 20px;border-bottom:1px solid var(--border);font-size:12px}
+.conviction-table tr:last-child td{border-bottom:none}
+.conv-ticker{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:1px}
+.conv-thesis{font-family:var(--sans);font-size:12px;color:var(--text2);line-height:1.6;font-weight:300;max-width:400px}
+.conv-signal{font-family:var(--mono);font-size:8px;letter-spacing:1px;padding:2px 8px;border:1px solid rgba(74,124,89,0.35);color:var(--green);text-transform:uppercase}
+
+/* RISK PANEL */
+.risk-panel{background:var(--surface);padding:24px}
+.risk-item{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);gap:16px}
+.risk-item:last-child{border-bottom:none}
+.risk-label{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;flex-shrink:0;width:120px}
+.risk-desc{font-family:var(--sans);font-size:11px;color:var(--text2);font-weight:300;line-height:1.6}
+.risk-level{font-family:var(--mono);font-size:8px;padding:2px 8px;border:1px solid;flex-shrink:0}
+.risk-low{border-color:rgba(74,124,89,0.4);color:var(--green)}
+.risk-med{border-color:rgba(200,169,110,0.3);color:var(--gold)}
+.risk-high{border-color:rgba(124,74,74,0.4);color:#c86e6e}
+
+/* FOOTER */
+.doc-footer{
+  border-top:1px solid var(--border);
+  padding:18px 48px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:1px;
+}
+.footer-left{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--text3);text-transform:uppercase}
+.footer-disc{font-family:var(--mono);font-size:8px;color:var(--text3);max-width:600px;text-align:center;line-height:1.6;opacity:0.6}
+.footer-right{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--text3)}
+
+/* FULL WIDTH PANEL */
+.full-panel{background:var(--surface);border:1px solid var(--border);margin-bottom:1px}
+
+/* SCORING FRAMEWORK */
+.score-panel{background:var(--surface)}
+.score-table{width:100%;border-collapse:collapse}
+.score-table thead tr{border-bottom:1px solid var(--border2)}
+.score-table th{
+  font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);padding:10px 16px;text-align:left;font-weight:400;
+}
+.score-table th.center{text-align:center}
+.score-table tbody tr{border-bottom:1px solid var(--border);transition:background 0.15s}
+.score-table tbody tr:hover{background:var(--surface2)}
+.score-table tbody tr:last-child{border-bottom:none}
+.score-table td{padding:11px 16px;vertical-align:middle}
+.score-ticker{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--gold);letter-spacing:1px}
+.score-cell{text-align:center}
+.score-pip{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  width:26px;height:26px;border-radius:2px;
+}
+.pip-5{background:rgba(74,124,89,0.25);color:#6db88a}
+.pip-4{background:rgba(74,124,89,0.12);color:#4a7c59}
+.pip-3{background:rgba(200,169,110,0.12);color:var(--gold)}
+.pip-2{background:rgba(124,74,74,0.12);color:#c86e6e}
+.pip-1{background:rgba(90,87,82,0.15);color:var(--text3)}
+.score-total{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text);text-align:center}
+.score-total.high{color:#6db88a}
+.score-total.med{color:var(--gold)}
+.score-weight{font-family:var(--mono);font-size:10px;color:var(--text3);text-align:center}
+.score-size{font-family:var(--mono);font-size:10px;color:var(--text2);text-align:center}
+
+/* SCORING LEGEND */
+.score-legend{
+  display:flex;gap:24px;align-items:center;
+  padding:12px 16px;
+  border-top:1px solid var(--border);
+  background:var(--surface);
+}
+.legend-item{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--text3);text-transform:uppercase}
+
+/* PORTFOLIO OUTPUTS */
+.outputs-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);
+}
+.output-card{
+  background:var(--surface);padding:22px 20px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.output-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.output-value{font-family:var(--display);font-size:30px;font-weight:900;color:var(--text);line-height:1}
+.output-value.gold{color:var(--gold)}
+.output-value.green{color:#6db88a}
+.output-sub{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.output-vs{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px}
+.output-vs span{color:var(--text2)}
+
+/* METHODOLOGY */
+.method-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.method-card{background:var(--surface);padding:20px}
+.method-num{font-family:var(--display);font-size:36px;font-weight:900;color:var(--gold);opacity:0.25;line-height:1;margin-bottom:8px}
+.method-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:8px}
+.method-desc{font-family:var(--sans);font-size:12px;color:var(--text3);line-height:1.75;font-weight:300}
+
+/* SCROLL REVEAL */
+[data-reveal]{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease}
+[data-reveal].visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<!-- DOCUMENT HEADER -->
+<div class="doc-header">
+  <div class="header-top">
+    <div class="header-left">
+      <span class="firm-name">Centurion Capital</span>
+      <span class="doc-type">Independent Research</span>
+    </div>
+    <div class="header-center">
+      <div class="doc-title">Portfolio Construction Model</div>
+    </div>
+    <div class="header-right">
+      <span class="meta-item">Analyst <span>Kerellos Tadros</span></span>
+      <span class="meta-item">Date <span>April 2026</span></span>
+      <span class="meta-item">Version <span>1.0</span></span>
+    </div>
+  </div>
+  <div class="header-rule"></div>
+  <div class="header-stats">
+    <div class="hstat">
+      <span class="hstat-label">Portfolio Holdings</span>
+      <span class="hstat-value">10 Positions</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-label">Strategy</span>
+      <span class="hstat-value">Concentrated Equity</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-label">Benchmark</span>
+      <span class="hstat-value">S&amp;P 500</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-label">Sectors</span>
+      <span class="hstat-value">7 Represented</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-label">Top 3 Concentration</span>
+      <span class="hstat-value">39%</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page">
+
+  <!-- HOLDINGS + ALLOCATION -->
+  <div class="two-col" data-reveal>
+    <div class="holdings-panel">
+      <div class="section-label">Holdings — Full Portfolio</div>
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th>Ticker / Name</th>
+            <th>Sector</th>
+            <th>Type</th>
+            <th class="right">Weight</th>
+            <th class="right">Allocation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="td-ticker">PLTR</div><div class="td-name">Palantir Technologies</div></td>
+            <td><span class="td-sector">Technology / AI</span></td>
+            <td><span class="td-type type-growth">Growth</span></td>
+            <td class="td-weight">15%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">V</div><div class="td-name">Visa Inc.</div></td>
+            <td><span class="td-sector">Financials</span></td>
+            <td><span class="td-type type-growth">Growth</span></td>
+            <td class="td-weight">12%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">AVGO</div><div class="td-name">Broadcom Inc.</div></td>
+            <td><span class="td-sector">Semiconductors</span></td>
+            <td><span class="td-type type-growth">Growth</span></td>
+            <td class="td-weight">12%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">HII</div><div class="td-name">Huntington Ingalls</div></td>
+            <td><span class="td-sector">Defense</span></td>
+            <td><span class="td-type type-defense">Defense</span></td>
+            <td class="td-weight">10%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:67%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">KNSL</div><div class="td-name">Kinsale Capital Group</div></td>
+            <td><span class="td-sector">Specialty Insurance</span></td>
+            <td><span class="td-type type-value">Value</span></td>
+            <td class="td-weight">10%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:67%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">IBKR</div><div class="td-name">Interactive Brokers</div></td>
+            <td><span class="td-sector">Financial Services</span></td>
+            <td><span class="td-type type-growth">Growth</span></td>
+            <td class="td-weight">10%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:67%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">TMO</div><div class="td-name">Thermo Fisher Scientific</div></td>
+            <td><span class="td-sector">Life Sciences</span></td>
+            <td><span class="td-type type-value">Value</span></td>
+            <td class="td-weight">10%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:67%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">CRM</div><div class="td-name">Salesforce Inc.</div></td>
+            <td><span class="td-sector">Enterprise Software</span></td>
+            <td><span class="td-type type-growth">Growth</span></td>
+            <td class="td-weight">10%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:67%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">O</div><div class="td-name">Realty Income Corp.</div></td>
+            <td><span class="td-sector">Real Estate / REIT</span></td>
+            <td><span class="td-type type-income">Income</span></td>
+            <td class="td-weight">6%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:40%"></div></div></td>
+          </tr>
+          <tr>
+            <td><div class="td-ticker">CTAS</div><div class="td-name">Cintas Corporation</div></td>
+            <td><span class="td-sector">Business Services</span></td>
+            <td><span class="td-type type-value">Value</span></td>
+            <td class="td-weight">5%</td>
+            <td class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alloc-panel">
+      <div class="section-label">Allocation</div>
+      <div class="alloc-inner">
+        <div class="donut-wrap">
+          <canvas id="donutChart" width="200" height="200"></canvas>
+        </div>
+        <div class="legend-list">
+          <div class="legend-row"><div class="legend-dot" style="background:#c8a96e"></div><span class="legend-ticker">PLTR</span><span class="legend-pct">15%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#9e8040"></div><span class="legend-ticker">V</span><span class="legend-pct">12%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#7a6030"></div><span class="legend-ticker">AVGO</span><span class="legend-pct">12%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#4a5a7c"></div><span class="legend-ticker">HII</span><span class="legend-pct">10%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#4a7c59"></div><span class="legend-ticker">KNSL</span><span class="legend-pct">10%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#6e8ac8"></div><span class="legend-ticker">IBKR</span><span class="legend-pct">10%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#7c4a7c"></div><span class="legend-ticker">TMO</span><span class="legend-pct">10%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#7c6a4a"></div><span class="legend-ticker">CRM</span><span class="legend-pct">10%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#3a5a7c"></div><span class="legend-ticker">O</span><span class="legend-pct">6%</span></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#5a3a3a"></div><span class="legend-ticker">CTAS</span><span class="legend-pct">5%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THESIS + METRICS -->
+  <div class="two-col" data-reveal>
+    <div class="thesis-panel">
+      <div class="section-label">Portfolio Investment Thesis</div>
+      <div style="padding:28px">
+        <div class="thesis-title">Concentrated Quality — Differentiated from Consensus</div>
+        <div class="thesis-body">
+          <p style="margin-bottom:14px">This portfolio is built around a single organizing principle: <strong>own businesses with durable competitive advantages in sectors undergoing structural change</strong>, while deliberately avoiding the crowded Magnificent Seven consensus that dominates most institutional and retail allocations.</p>
+          <p style="margin-bottom:14px">The top three positions — <strong>PLTR, V, and AVGO</strong> — represent three distinct expressions of the AI infrastructure buildout. Palantir captures the data intelligence layer, Broadcom the custom silicon layer, and Visa the financial infrastructure that processes the commerce enabled by the broader digital economy.</p>
+          <p style="margin-bottom:14px">The middle six positions provide sector diversification without sacrificing quality. <strong>HII</strong> benefits from sustained defense spending with long-duration government contracts. <strong>KNSL</strong> represents a best-in-class specialty insurer with superior underwriting discipline rarely found in financial services. <strong>IBKR</strong> is the infrastructure play on capital market activity. <strong>TMO</strong> and <strong>CRM</strong> offer exposure to life sciences infrastructure and enterprise AI adoption at what Morningstar estimates as meaningful discounts to fair value.</p>
+          <p>The final two positions — <strong>O and CTAS</strong> — serve as ballast. Realty Income provides monthly dividend income and low correlation to growth. Cintas offers compounding recurring revenue with a decades-long track record of market outperformance. Combined, they reduce portfolio volatility without sacrificing long-term return potential.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="background:var(--surface)">Portfolio Metrics</div>
+      <div class="metrics-panel">
+        <div class="metric-block">
+          <div class="metric-title">Concentration — Top 3</div>
+          <div class="metric-value">39%</div>
+          <div class="metric-sub">PLTR + V + AVGO</div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="width:39%"></div></div>
+        </div>
+        <div class="metric-block">
+          <div class="metric-title">Growth Exposure</div>
+          <div class="metric-value">59%</div>
+          <div class="metric-sub">PLTR, V, AVGO, IBKR, CRM</div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="width:59%"></div></div>
+        </div>
+        <div class="metric-block">
+          <div class="metric-title">Value / Quality Exposure</div>
+          <div class="metric-value">30%</div>
+          <div class="metric-sub">HII, KNSL, TMO, CTAS</div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="width:30%"></div></div>
+        </div>
+        <div class="metric-block">
+          <div class="metric-title">Income / Defensive</div>
+          <div class="metric-value">11%</div>
+          <div class="metric-sub">O (REIT) + CTAS dividend</div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="width:11%"></div></div>
+        </div>
+        <div class="metric-block">
+          <div class="metric-title">Sectors Represented</div>
+          <div class="metric-value">7</div>
+          <div class="metric-sub">Tech, Financials, Defense, Life Sciences, Insurance, REIT, Services</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTOR + RISK -->
+  <div class="three-col" data-reveal>
+    <div>
+      <div class="section-label" style="background:var(--surface)">Sector Breakdown</div>
+      <div class="sector-panel">
+        <div class="sector-row">
+          <span class="sector-name">Technology / AI</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:27%;background:#c8a96e"></div></div>
+          <span class="sector-pct">27%</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-name">Financials</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:32%;background:#6e8ac8"></div></div>
+          <span class="sector-pct">32%</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-name">Defense</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:10%;background:#c86e6e"></div></div>
+          <span class="sector-pct">10%</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-name">Life Sciences</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:10%;background:#7c4a7c"></div></div>
+          <span class="sector-pct">10%</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-name">Enterprise Software</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:10%;background:#7c6a4a"></div></div>
+          <span class="sector-pct">10%</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-name">Real Estate</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:6%;background:#3a5a7c"></div></div>
+          <span class="sector-pct">6%</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-name">Business Services</span>
+          <div class="sector-bar"><div class="sector-bar-fill" style="width:5%;background:#5a3a3a"></div></div>
+          <span class="sector-pct">5%</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="grid-column:span 2">
+      <div class="section-label" style="background:var(--surface)">Risk Considerations</div>
+      <div class="risk-panel">
+        <div class="risk-item">
+          <span class="risk-label">Valuation Risk</span>
+          <span class="risk-desc">PLTR trades at a significant premium to intrinsic value. Sustained high multiples require continued execution. Position sized at 15% reflecting conviction balanced against valuation risk.</span>
+          <span class="risk-level risk-high">Elevated</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-label">Concentration</span>
+          <span class="risk-desc">Top 3 positions represent 39% of the portfolio. Deliberate and thesis-driven but creates meaningful idiosyncratic exposure. Diversification across sectors partially mitigates this.</span>
+          <span class="risk-level risk-med">Moderate</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-label">Rate Sensitivity</span>
+          <span class="risk-desc">Realty Income (O) and growth names carry duration risk in a sustained high-rate environment. The income allocation is limited to 6% to manage this exposure.</span>
+          <span class="risk-level risk-med">Moderate</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-label">Defense Spending</span>
+          <span class="risk-desc">HII depends on U.S. federal defense budget stability. Geopolitical tailwinds are currently supportive. Long-duration contracts provide near-term revenue visibility.</span>
+          <span class="risk-level risk-low">Contained</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-label">AI Cycle Risk</span>
+          <span class="risk-desc">Multiple holdings benefit from AI infrastructure buildout. A deceleration in enterprise AI spending would affect PLTR, AVGO, and CRM simultaneously. Partially offset by non-AI positions.</span>
+          <span class="risk-level risk-med">Moderate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONVICTION SUMMARY -->
+  <div class="full-panel" data-reveal>
+    <div class="section-label">Per-Position Conviction Summary</div>
+    <table class="conviction-table">
+      <thead>
+        <tr>
+          <th>Ticker</th>
+          <th>Core Thesis</th>
+          <th>Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="conv-ticker">PLTR</span></td>
+          <td><span class="conv-thesis">The only commercially scaled AI platform with proven government and enterprise deployment. AIP growth inflecting. Profitability milestone crossed. Positioned at the intersection of defense intelligence and commercial AI.</span></td>
+          <td><span class="conv-signal">Buy / Hold</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">V</span></td>
+          <td><span class="conv-thesis">Asset-light payments network with 50%+ operating margins and a durable moat built over decades of merchant and bank relationships. Direct beneficiary of global cash-to-digital conversion with decades of runway remaining.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">AVGO</span></td>
+          <td><span class="conv-thesis">Custom AI silicon (XPUs) for hyperscalers is the next phase of the AI buildout. Broadcom's ASIC business is growing at 74% with EPS projected to nearly double by 2029. Less consensus-crowded than Nvidia at current valuation.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">HII</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">KNSL</span></td>
+          <td><span class="conv-thesis">Specialty insurer with best-in-class combined ratio and disciplined underwriting culture. Kayne Anderson Rudnick-style quality name with consistent earnings growth and minimal catastrophe exposure relative to peers.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">IBKR</span></td>
+          <td><span class="conv-thesis">Infrastructure play on capital market volumes with low-cost brokerage and margin lending tailwinds. Benefits from elevated rate environment and growing institutional client base. Held by top-rated fund managers.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">TMO</span></td>
+          <td><span class="conv-thesis">Life sciences infrastructure monopoly with recurring revenues from instruments, reagents, and services. Morningstar estimates shares at a discount to fair value. China headwinds transitory; long-term secular demand intact.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">CRM</span></td>
+          <td><span class="conv-thesis">Agentforce AI platform represents a genuine monetization catalyst beyond the core CRM business. Morningstar rates shares 28% undervalued. Enterprise AI adoption is accelerating, and Salesforce is the distribution layer.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">O</span></td>
+          <td><span class="conv-thesis">The S&P 500's only monthly dividend payer with 30+ consecutive years of increases. High-quality net lease REIT with investment-grade tenants. Portfolio ballast and income generation with low correlation to growth holdings.</span></td>
+          <td><span class="conv-signal">Hold / Income</span></td>
+        </tr>
+        <tr>
+          <td><span class="conv-ticker">CTAS</span></td>
+          <td><span class="conv-thesis">Compounding compounder. Uniform services with massive recurring revenue base, growing customer cross-sell opportunity, and a multi-decade record of earnings and dividend growth. Low-volatility anchor to the portfolio.</span></td>
+          <td><span class="conv-signal">Buy</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+  <!-- METHODOLOGY -->
+  <div class="full-panel" data-reveal style="margin-bottom:1px">
+    <div class="section-label">Selection Methodology</div>
+    <div class="method-grid">
+      <div class="method-card">
+        <div class="method-num">01</div>
+        <div class="method-title">Business Quality Screen</div>
+        <div class="method-desc">Each candidate must demonstrate durable competitive advantage: pricing power, network effects, switching costs, or cost advantages. Screened for return on invested capital above 15% over 5 years. Eliminates commoditized businesses regardless of growth rate.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">02</div>
+        <div class="method-title">Structural Tailwind Filter</div>
+        <div class="method-desc">Each position must benefit from a multi-year secular trend independent of the economic cycle. AI infrastructure buildout, defense spending expansion, digital payments adoption, and specialty insurance market growth each qualify. Pure cyclical exposure is excluded.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">03</div>
+        <div class="method-title">Valuation Discipline</div>
+        <div class="method-desc">No position is sized above 12% unless the growth rate justifies the multiple on a PEG basis. PLTR's 15% sizing reflects AIP platform optionality as a non-linear upside driver. All other positions trade below 30x forward earnings except CTAS, which earns its premium through compounding consistency.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">04</div>
+        <div class="method-title">Position Sizing Logic</div>
+        <div class="method-desc">Position size is determined by composite conviction score (quality, valuation, growth, catalyst). Maximum single position is 15%. Income and defensive positions are capped at 6% each. The result is a portfolio with meaningful active share versus the S&amp;P 500 index while maintaining controlled risk at the portfolio level.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORING FRAMEWORK -->
+  <div class="full-panel" data-reveal style="margin-bottom:1px">
+    <div class="section-label">Position Scoring Framework — Weighted Conviction Model</div>
+    <div class="score-panel">
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th style="width:70px">Ticker</th>
+            <th class="center">Business Quality<br><span style="opacity:0.5;font-size:7px">ROIC / Moat (25%)</span></th>
+            <th class="center">Valuation<br><span style="opacity:0.5;font-size:7px">PE / PEG / FCF (25%)</span></th>
+            <th class="center">Growth Runway<br><span style="opacity:0.5;font-size:7px">Rev Growth Est (25%)</span></th>
+            <th class="center">Catalyst<br><span style="opacity:0.5;font-size:7px">Near-Term Driver (25%)</span></th>
+            <th class="center">Composite<br><span style="opacity:0.5;font-size:7px">Weighted Score</span></th>
+            <th class="center">Position<br><span style="opacity:0.5;font-size:7px">Size</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="score-ticker">PLTR</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-2">2</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-total high">4.25</span></td>
+            <td class="score-weight">15%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">V</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-total high">4.00</span></td>
+            <td class="score-weight">12%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">AVGO</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-total high">4.75</span></td>
+            <td class="score-weight">12%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">HII</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-total med">3.75</span></td>
+            <td class="score-weight">10%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">KNSL</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-total high">4.00</span></td>
+            <td class="score-weight">10%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">IBKR</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-total med">3.75</span></td>
+            <td class="score-weight">10%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">TMO</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-total med">3.75</span></td>
+            <td class="score-weight">10%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">CRM</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-total high">4.00</span></td>
+            <td class="score-weight">10%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">O</span></td>
+            <td class="score-cell"><span class="score-pip pip-4">4</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-2">2</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-total med">3.50</span></td>
+            <td class="score-weight">6%</td>
+          </tr>
+          <tr>
+            <td><span class="score-ticker">CTAS</span></td>
+            <td class="score-cell"><span class="score-pip pip-5">5</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-pip pip-3">3</span></td>
+            <td class="score-cell"><span class="score-total med">3.50</span></td>
+            <td class="score-weight">5%</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="score-legend">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-right:8px">Score Key:</span>
+        <div class="legend-item"><span class="score-pip pip-5" style="width:20px;height:20px;font-size:9px">5</span>Exceptional</div>
+        <div class="legend-item"><span class="score-pip pip-4" style="width:20px;height:20px;font-size:9px">4</span>Strong</div>
+        <div class="legend-item"><span class="score-pip pip-3" style="width:20px;height:20px;font-size:9px">3</span>Adequate</div>
+        <div class="legend-item"><span class="score-pip pip-2" style="width:20px;height:20px;font-size:9px">2</span>Weak</div>
+        <div class="legend-item"><span class="score-pip pip-1" style="width:20px;height:20px;font-size:9px">1</span>Poor</div>
+        <span style="margin-left:auto;font-family:var(--mono);font-size:8px;color:var(--text3)">Weighted equally across 4 criteria. Scores drive position sizing — higher conviction scores receive larger allocations.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO-LEVEL OUTPUTS -->
+  <div class="full-panel" data-reveal>
+    <div class="section-label">Portfolio-Level Outputs vs. S&P 500 Benchmark</div>
+    <div class="outputs-grid">
+      <div class="output-card">
+        <span class="output-label">Wtd. Avg. Fwd P/E</span>
+        <span class="output-value gold">52x</span>
+        <span class="output-sub">Blended across 10 positions</span>
+        <span class="output-vs">vs. S&amp;P 500 <span>~22x</span></span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">Wtd. Avg. Rev Growth</span>
+        <span class="output-value green">28%</span>
+        <span class="output-sub">FY2026 consensus estimate</span>
+        <span class="output-vs">vs. S&amp;P 500 <span>~6%</span></span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">Wtd. Avg. Beta</span>
+        <span class="output-value">1.35</span>
+        <span class="output-sub">Moderate above-market vol</span>
+        <span class="output-vs">vs. S&amp;P 500 <span>1.00</span></span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">Wtd. Avg. Dividend Yield</span>
+        <span class="output-value">0.8%</span>
+        <span class="output-sub">Primarily growth-oriented</span>
+        <span class="output-vs">vs. S&amp;P 500 <span>~1.3%</span></span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">Active Share vs. S&P 500</span>
+        <span class="output-value gold">~91%</span>
+        <span class="output-sub">Highly differentiated from index</span>
+        <span class="output-vs">No Mag 7 holdings</span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">Growth / Value Split</span>
+        <span class="output-value">59/41</span>
+        <span class="output-sub">Growth dominant, quality anchored</span>
+        <span class="output-vs">Intentional tilt</span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">Max Single Position</span>
+        <span class="output-value">15%</span>
+        <span class="output-sub">PLTR — highest conviction</span>
+        <span class="output-vs">Hard cap enforced</span>
+      </div>
+      <div class="output-card">
+        <span class="output-label">PEG Interpretation</span>
+        <span class="output-value green">0.9x</span>
+        <span class="output-sub">Blended PEG (ex-PLTR outlier)</span>
+        <span class="output-vs">Below 1.0x signals fair value</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <span class="footer-left">Centurion Capital — Portfolio Research</span>
+  <span class="footer-disc">This model is for analytical and informational purposes only and does not constitute investment advice. All data sourced from publicly available filings, SEC EDGAR, and analyst consensus estimates. Past performance is not indicative of future results.</span>
+  <span class="footer-right">Kerellos Tadros — April 2026</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const ctx = document.getElementById('donutChart').getContext('2d');
+new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ['PLTR','V','AVGO','HII','KNSL','IBKR','TMO','CRM','O','CTAS'],
+    datasets: [{
+      data: [15,12,12,10,10,10,10,10,6,5],
+      backgroundColor: ['#c8a96e','#9e8040','#7a6030','#4a5a7c','#4a7c59','#6e8ac8','#7c4a7c','#7c6a4a','#3a5a7c','#5a3a3a'],
+      borderColor: '#050505',
+      borderWidth: 3,
+      hoverOffset: 4
+    }]
+  },
+  options: {
+    responsive: false,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ' ' + ctx.label + '  ' + ctx.parsed + '%'
+        },
+        backgroundColor: '#141414',
+        borderColor: 'rgba(200,169,110,0.2)',
+        borderWidth: 1,
+        titleColor: '#c8a96e',
+        bodyColor: '#9e9990',
+        titleFont: { family: 'IBM Plex Mono', size: 11 },
+        bodyFont: { family: 'IBM Plex Mono', size: 10 }
+      }
+    }
+  }
+});
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
+
+// Fix HII row which got truncated
+const rows = document.querySelectorAll('.conviction-table tbody tr');
+rows.forEach(row => {
+  const cells = row.querySelectorAll('td');
+  if (cells[0] && cells[0].querySelector('.conv-ticker') && cells[0].querySelector('.conv-ticker').textContent === 'HII') {
+    if (cells[1]) cells[1].innerHTML = '<span class="conv-thesis">Largest U.S. naval shipbuilder with a government-backed backlog exceeding $45 billion. Geopolitical tailwinds from NATO spending and Pacific naval expansion directly benefit HII. Long-duration contracts provide multi-year revenue visibility with minimal competitive risk.</span>';
+  }
+});
+</script>
+</body>
+</html>
